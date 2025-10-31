@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from functools import wraps
 import os
 import random
 
@@ -15,6 +16,17 @@ app.config['SECRET_KEY'] = 'kisanseva-secret-key-2025'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 db = SQLAlchemy(app)
+
+# PASSWORD PROTECTION
+SITE_PASSWORD = "KisanSeva2025"  # ← CHANGE THIS TO YOUR PASSWORD
+
+def check_password(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('authenticated'):
+            return redirect(url_for('password_gate'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ------- DATABASE MODELS -------
 class User(db.Model):
@@ -126,13 +138,26 @@ with app.app_context():
     db.create_all()
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# ------- ROUTES -------
+# ------- PASSWORD GATE -------
+@app.route('/password', methods=['GET', 'POST'])
+def password_gate():
+    if request.method == 'POST':
+        if request.form.get('password') == SITE_PASSWORD:
+            session['authenticated'] = True
+            return redirect(url_for('index'))
+        else:
+            return render_template('password.html', error=True)
+    return render_template('password.html')
+
+# ------- ROUTES (ALL PROTECTED) -------
 @app.route('/')
+@check_password
 def index():
     username = session.get('user')
     return render_template('login_landing.html', username=username)
 
 @app.route('/dashboard')
+@check_password
 def dashboard():
     if not session.get('user_id'):
         return redirect(url_for('login_register'))
@@ -143,6 +168,7 @@ def dashboard():
 
 # ------- LOGIN / REGISTER -------
 @app.route('/login_register', methods=['GET', 'POST'])
+@check_password
 def login_register():
     if request.method == 'POST':
         action = request.form.get('action')
@@ -183,6 +209,7 @@ def login_register():
     return render_template('login_register.html', username=session.get('user'))
 
 @app.route('/logout')
+@check_password
 def logout():
     session.pop('user', None)
     session.pop('user_id', None)
@@ -191,6 +218,7 @@ def logout():
 
 # ---- AI PEST DIAGNOSIS -------
 @app.route('/ai-pest-diagnosis', methods=['GET', 'POST'])
+@check_password
 def ai_pest_diagnosis():
     if request.method == 'POST':
         file = request.files.get('image')
@@ -227,6 +255,7 @@ def ai_pest_diagnosis():
     return render_template('ai_pest_diagnosis.html', username=session.get('user'))
 
 @app.route('/crop-calendar')
+@check_password
 def crop_calendar():
     season = request.args.get('season', 'All')
     if season == 'All':
@@ -236,6 +265,7 @@ def crop_calendar():
     return render_template('crop_calendar.html', crops=crops, username=session.get('user'))
 
 @app.route('/roi-calculator', methods=['GET', 'POST'])
+@check_password
 def roi_calculator():
     results = None
     if request.method == 'POST':
@@ -262,6 +292,7 @@ def roi_calculator():
     return render_template('roi_calculator.html', results=results, username=session.get('user'))
 
 @app.route('/knowledge-exchange', methods=['GET', 'POST'])
+@check_password
 def knowledge_exchange():
     if request.method == 'POST':
         title = request.form['title']
@@ -279,6 +310,7 @@ def knowledge_exchange():
     return render_template('knowledge_exchange.html', posts=posts, username=session.get('user'))
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+@check_password
 def view_post(post_id):
     post = ForumPost.query.get_or_404(post_id)
     if request.method == 'POST':
@@ -292,6 +324,7 @@ def view_post(post_id):
     return render_template('view_post.html', post=post, username=session.get('user'))
 
 @app.route('/marketplace')
+@check_password
 def marketplace():
     category = request.args.get('category', 'all')
     if category == 'all':
@@ -301,6 +334,7 @@ def marketplace():
     return render_template('marketplace.html', listings=listings, username=session.get('user'))
 
 @app.route('/marketplace/add', methods=['GET', 'POST'])
+@check_password
 def add_listing():
     if request.method == 'POST':
         title = request.form['title']
@@ -322,10 +356,12 @@ def add_listing():
     return render_template('add_listing.html', username=session.get('user'))
 
 @app.route('/language_support')
+@check_password
 def language_support():
     return render_template('language_support.html', username=session.get('user'))
 
 @app.route('/product_details')
+@check_password
 def product_details():
     return render_template('product_details.html', username=session.get('user'))
 

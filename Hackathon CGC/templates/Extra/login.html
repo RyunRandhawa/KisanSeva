@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - EduTech</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #313866 0%, #5D0E41 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 2rem 2.5rem;
+            max-width: 370px;
+            margin: auto;
+            margin-top: 8vh;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 2.2rem;
+            color: #fff;
+            letter-spacing: 3px;
+        }
+        .tech-shadow {
+            color: #56C2FF;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 2px 4px 12px #5D0E41;
+        }
+        .login-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .blurb {
+            color: #cabfff;
+            margin-bottom: 1.6rem;
+            font-size: 1.1rem;
+            text-align: left;
+        }
+        .form-control, .btn {
+            border-radius: 1.8rem;
+        }
+        .btn-primary {
+            background: #56C2FF;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 0 10px #56C2FF77;
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            background: #5D0E41;
+            color: #56C2FF;
+        }
+        .small-link {
+            color: #cabfff;
+            margin-top: 0.8rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:100vw; min-height:100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="logo mb-2">EduTech</div>
+        <div class="tech-shadow mb-1">Login</div>
+        <p class="blurb">Welcome back! <br>Log in to experience <strong>the future of learning</strong>.</p>
+        <div class="glass-card">
+            <form method="POST" autocomplete="off">
+                <div class="login-title">Sign in to your account</div>
+                <input type="text" name="username" class="form-control mb-3" placeholder="Username" required autofocus>
+                <input type="password" name="password" class="form-control mb-4" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary w-100 mb-1">Login</button>
+            </form>
+            <a href="{{ url_for('register') }}" class="small-link text-center text-decoration-none">Don't have an account? Register &rarr;</a>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-warning mt-3 p-2 small">{{ messages[0] }}</div>
+              {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</body>
+</html>

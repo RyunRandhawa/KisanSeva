@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Pest Diagnosis - KisanSeva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-primary: #2F6B3D;
+            --green-light: #4A8F5A;
+            --green-dark: #1E4A2A;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --white: #ffffff;
+            --bg-light: #F8F9FA;
+            --border-light: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--green-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .upload-zone {
+            border: 3px dashed var(--border-light);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            background: var(--bg-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--green-primary);
+            background: rgba(47,107,61,0.05);
+        }
+
+        .upload-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-zone h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .upload-zone p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-btn {
+            background: var(--green-primary);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47,107,61,0.3);
+        }
+
+        .sample-section {
+            margin-top: 3rem;
+        }
+
+        .sample-section h4 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .sample-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .sample-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(47,107,61,0.2);
+        }
+
+        .sample-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .sample-card-content {
+            padding: 1rem;
+        }
+
+        .sample-card h5 {
+            font-size: 1.1rem;
+            color: var(--green-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .sample-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            display: none;
+        }
+
+        .analyzing {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 5px solid var(--border-light);
+            border-top: 5px solid var(--green-primary);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .analyzing h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-container {
+            display: none;
+        }
+
+        .result-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .result-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 4px solid var(--green-primary);
+        }
+
+        .result-info h2 {
+            font-size: 2.2rem;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            background: rgba(47,107,61,0.15);
+            color: var(--green-primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .result-description {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .result-description p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .treatment-section {
+            margin-top: 2.5rem;
+        }
+
+        .treatment-section h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .treatment-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .treatment-steps li {
+            counter-increment: step-counter;
+            padding: 1.2rem 1.5rem 1.2rem 5rem;
+            margin-bottom: 1rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            position: relative;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .treatment-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--green-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .prevention-box {
+            background: rgba(47,107,61,0.08);
+            border-left: 5px solid var(--green-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2.5rem;
+        }
+
+        .prevention-box h4 {
+            color: var(--green-primary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .prevention-box p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn-reset {
+            flex: 1;
+            background: var(--green-primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-reset:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 1.5rem;
+            }
+
+            .result-header {
+                grid-template-columns: 1fr;
+            }
+
+            .result-image {
+                width: 100%;
+                height: auto;
+                margin: 0 auto;
+            }
+
+            .sample-images {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+
+        <div class="header">
+            <h1>🔬 AI Pest Diagnosis</h1>
+            <p>Upload your crop photos and get instant pest identification with treatment recommendations</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Upload Section -->
+            <div id="uploadSection">
+                <div class="upload-zone" id="dropZone">
+                    <div class="upload-icon">📸</div>
+                    <h3>Upload Your Crop Photo</h3>
+                    <p>Drag and drop an image here, or click the button below</p>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        Choose Image
+                    </button>
+                </div>
+
+                <div class="sample-section">
+                    <h4>Or try with sample crop images:</h4>
+                    <div class="sample-images">
+                        <div class="sample-card" onclick="analyzeSample('Aphids', 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600')">
+                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600" alt="Aphid infestation">
+                            <div class="sample-card-content">
+                                <h5>Aphid Infestation</h5>
+                                <p>Common in wheat and vegetable crops</p>
+                            </div>
+                        </div>
+                        <div class="sample-card" onclick="analyzeSample('Leaf Blight', 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=600')">
+                            <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=600" alt="Leaf disease">
+                            <div class="sample-card-content">
+                                <h5>Leaf Blight Disease</h5>
+                                <p>Fungal disease in rice and wheat</p>
+                            </div>
+                        </div>
+                        <div class="sample-card" onclick="analyzeSample('Caterpillar', 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600')">
+                            <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600" alt="Pest damage">
+                            <div class="sample-card-content">
+                                <h5>Caterpillar Damage</h5>
+                                <p>Common in cotton and vegetables</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Section -->
+            <div id="analysisSection" class="analysis-section">
+                <div class="analyzing" id="analyzing">
+                    <div class="spinner"></div>
+                    <h3>Analyzing your crop image...</h3>
+                    <p style="color: var(--text-light); margin-top: 1rem;">Our AI is identifying pests and diseases</p>
+                </div>
+
+                <div id="resultContainer" class="result-container">
+                    <div class="result-header">
+                        <img id="resultImage" class="result-image" src="" alt="Analyzed crop">
+                        <div class="result-info">
+                            <h2 id="pestName">Detected Pest</h2>
+                            <span class="confidence-badge" id="confidence">95% Confidence</span>
+                        </div>
+                    </div>
+
+                    <div class="result-description">
+                        <p id="pestDescription"></p>
+                    </div>
+
+                    <div class="treatment-section">
+                        <h3>💊 Recommended Treatment Plan</h3>
+                        <ul class="treatment-steps" id="treatmentSteps"></ul>
+                    </div>
+
+                    <div class="prevention-box">
+                        <h4>💡 Prevention Tips</h4>
+                        <p id="preventionTip"></p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-reset" onclick="resetDiagnosis()">
+                            Analyze Another Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        const pestDatabase = {
+            'Aphids': {
+                name: 'Aphids (माहू)',
+                description: 'Small soft-bodied insects that suck plant sap, causing leaves to curl and yellow. Common in wheat, mustard, and vegetable crops during cooler months.',
+                treatments: [
+                    'Spray neem oil solution (5ml per liter of water) in the evening',
+                    'Release natural predators like ladybugs (20-30 per plant)',
+                    'Use yellow sticky traps to monitor and catch flying aphids',
+                    'Apply soap water spray (2 tablespoons dishwashing liquid per liter)'
+                ],
+                prevention: 'Plant marigolds and mint around crops to repel aphids naturally. Avoid over-fertilization with nitrogen which attracts aphids. Maintain proper spacing between plants for air circulation.'
+            },
+            'Leaf Blight': {
+                name: 'Leaf Blight (पत्ती झुलसा)',
+                description: 'Fungal disease causing brown spots, wilting, and leaf death. Common in rice, wheat, and potato crops during humid weather conditions.',
+                treatments: [
+                    'Remove and burn all infected leaves immediately to prevent spread',
+                    'Apply copper-based fungicide (Bordeaux mixture) as directed on packet',
+                    'Ensure proper spacing between plants (minimum 6 inches) for air circulation',
+                    'Use resistant crop varieties for the next planting season'
+                ],
+                prevention: 'Avoid overhead irrigation - water at soil level only. Practice crop rotation with non-host crops like legumes. Ensure good drainage in fields to prevent water logging. Remove crop debris after harvest.'
+            },
+            'Caterpillar': {
+                name: 'Caterpillar Damage (सुंडी)',
+                description: 'Larvae of moths and butterflies that eat leaves, stems, and fruits. Common in cotton, tomato, cabbage, and other vegetable crops.',
+                treatments: [
+                    'Handpick caterpillars during early morning when they are sluggish',
+                    'Use Bacillus thuringiensis (Bt) organic spray in the evening',
+                    'Install pheromone traps to catch and monitor adult moths',
+                    'Apply neem-based pesticides mixed with soap solution in evening'
+                ],
+                prevention: 'Use our solar insect trap to catch adult moths before they lay eggs. Plant neem trees around farm boundaries. Encourage natural predators like birds by providing perching spots. Regular monitoring twice weekly.'
+            },
+            'White Fly': {
+                name: 'White Fly (सफेद मक्खी)',
+                description: 'Tiny white flying insects that damage crops by sucking sap and spreading viral diseases. Common in cotton, tomato, and okra.',
+                treatments: [
+                    'Install yellow sticky traps near affected plants',
+                    'Spray neem oil (10ml per liter) mixed with soap solution',
+                    'Remove heavily infested leaves and dispose properly',
+                    'Use biological control with parasitic wasps (Encarsia formosa)'
+                ],
+                prevention: 'Maintain field hygiene by removing weeds and crop debris. Use reflective mulches to confuse white flies. Plant trap crops like mustard around main crop. Install fine mesh nets on seedling beds.'
+            }
+        };
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        // --- ADDED uploadBtn ---
+        const uploadBtn = document.querySelector('.upload-btn'); // Get the button
+
+        let model; // This will hold our AI model
+
+        // 1. Load the AI model and UPDATE THE BUTTON
+        async function loadModel() {
+            console.log("Loading AI model...");
+            // --- ADDED button disable logic ---
+            uploadBtn.textContent = 'Loading AI Model...';
+            uploadBtn.disabled = true;
+
+            try {
+                model = await mobilenet.load();
+                console.log("Model loaded successfully!");
+                // --- AI IS READY ---
+                uploadBtn.textContent = 'Choose Image';
+                uploadBtn.disabled = false;
+
+            } catch (err) {
+                console.error("Failed to load model:", err);
+                // --- AI FAILED ---
+                uploadBtn.textContent = 'AI Failed to Load';
+                uploadBtn.style.backgroundColor = '#cc0000';
+            }
+        }
+        loadModel(); // Call it immediately
+
+        // Drag and drop handlers (no changes)
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        // 2. This function now handles the file and calls the AI
+        async function handleFile(file) {
+            const imgSrc = URL.createObjectURL(file);
+            showAnalyzing();
+
+            const imgElement = document.getElementById('resultImage');
+            imgElement.src = imgSrc;
+
+            imgElement.onload = async () => {
+                // 3. RUN THE REAL AI PREDICTION!
+                console.log("Classifying image...");
+                let predictions;
+                try {
+                    predictions = await model.classify(imgElement);
+                    console.log("AI Predictions:", predictions);
+                } catch (err) {
+                    console.error("Error during classification:", err);
+                    alert("AI analysis failed. Please try a different image.");
+                    resetDiagnosis();
+                    return;
+                }
+
+                // 4. Map the AI guess to our database
+                const topGuess = predictions[0].className;
+                const pestType = mapPredictionToPest(topGuess);
+
+                // --- ADDED NULL CHECK ---
+                if (pestType === null) {
+                    console.log("AI guess was not a pest:", topGuess);
+                    alert("Pest not recognized. Please upload a clear photo of a crop or pest.");
+                    resetDiagnosis();
+                    return;
+                }
+
+                // --- FIXED CONFIDENCE ---
+                const confidence = Math.floor(predictions[0].probability * 100) + '%';
+
+                // 5. Show results
+                setTimeout(() => {
+                    showResults(imgSrc, pestType, confidence);
+                }, 1500);
+            }
+        }
+
+        // 6. THE "HACKATHON HACK" FUNCTION (WITH ALL FIXES)
+        function mapPredictionToPest(prediction) {
+            const p = prediction.toLowerCase();
+            console.log("Mapping prediction:", p);
+
+            // Keywords for Caterpillar
+            if (p.includes('caterpillar') || p.includes('worm')) {
+                return 'Caterpillar';
+            }
+            // Keywords for White Fly
+            if (p.includes('fly')) {
+                return 'White Fly';
+            }
+            // Keywords for Aphids
+            if (p.includes('ant') || p.includes('beetle') || p.includes('grasshopper') || p.includes('insect')) {
+                return 'Aphids';
+            }
+            // Keywords for Leaf Blight
+            if (p.includes('leaf') || p.includes('plant') || p.includes('scab') || p.includes('fungus') || p.includes('mushroom') || p.includes('corn') || p.includes('cucumber') || p.includes('bell pepper')) {
+                return 'Leaf Blight';
+            }
+
+            // --- FIXED FALLBACK ---
+            // Fallback for non-pests (like headphones)
+            return null;
+        }
+
+        function analyzeSample(pestType, imgSrc) {
+            showAnalyzing();
+            const imgElement = document.getElementById('resultImage');
+            imgElement.src = imgSrc;
+
+            imgElement.onload = () => {
+                setTimeout(() => {
+                    // --- FIXED CONFIDENCE ---
+                    const confidence = '94%'; // Constant for samples
+                    showResults(imgSrc, pestType, confidence);
+                }, 3000);
+            }
+        }
+
+        function showAnalyzing() {
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('analysisSection').style.display = 'block';
+            document.getElementById('analyzing').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+        }
+
+        function showResults(imgSrc, pestType, confidence) {
+            const pest = pestDatabase[pestType];
+
+            if (!pest) {
+                console.error("Pest type not found in database:", pestType);
+                alert("An error occurred. Could not find pest data.");
+                resetDiagnosis();
+                return;
+            }
+
+            document.getElementById('analyzing').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+
+            document.getElementById('resultImage').src = imgSrc;
+            document.getElementById('pestName').textContent = pest.name;
+            document.getElementById('confidence').textContent = confidence;
+            document.getElementById('pestDescription').textContent = pest.description;
+
+            const stepsHtml = pest.treatments.map(step => `<li>${step}</li>`).join('');
+            document.getElementById('treatmentSteps').innerHTML = stepsHtml;
+
+            document.getElementById('preventionTip').textContent = pest.prevention;
+        }
+
+        function resetDiagnosis() {
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('analysisSection').style.display = 'none';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>

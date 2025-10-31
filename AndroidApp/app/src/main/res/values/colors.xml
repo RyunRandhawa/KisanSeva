@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary_green">#2D5016</color>
+    <color name="accent_green">#4A7C2C</color>
+    <color name="light_green">#7FA650</color>
+    <color name="golden_yellow">#F4A416</color>
+    <color name="earth_brown">#6B4423</color>
+    <color name="cream">#FAF9F6</color>
+
+    <!-- Text Colors -->
+    <color name="text_dark">#1a1a1a</color>
+    <color name="text_light">#666666</color>
+
+    <!-- System Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Bottom Navigation Colors -->
+    <color name="bottom_nav_selected">#FFFFFF</color>
+    <color name="bottom_nav_unselected">#B0FFFFFF</color>
+
+    <!-- Status Bar -->
+    <color name="status_bar">#1E3A10</color>
+
+    <!-- Background -->
+    <color name="background">#F5F7F2</color>
+
+    <!-- Purple colors for Material Design (default) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+</resources>

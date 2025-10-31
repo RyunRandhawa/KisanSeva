@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-xl mt-4 mb-4">
+  <h2 class="mb-4">{{ subject.name }}</h2>
+  <div class="row">
+    {% for ch in subject.chapters %}
+      {% set emoji = "📘" %}
+      {% if "atomic" in ch.name.lower() %}
+        {% set emoji = "⚛️" %}
+      {% elif "organic" in ch.name.lower() %}
+        {% set emoji = "⌬" %}
+      {% elif "thermo" in ch.name.lower() %}
+        {% set emoji = "🔥" %}
+      {% elif "kinematic" in ch.name.lower() %}
+        {% set emoji = "🏃" %}
+      {% elif "quadratic" in ch.name.lower() %}
+        {% set emoji = "🧮" %}
+      {% endif %}
+      <div class="col-md-4 mb-4 d-flex">
+        <div class="card shadow p-4 w-100 d-flex flex-column align-items-center" style="min-height:120px;">
+          <span style="font-size:2rem;">{{ emoji }}</span>
+          <h4 style="font-weight:700; margin-top:12px;">{{ ch.name }}</h4>
+          <a href="{{ url_for('chapter', chapter_id=ch.id) }}" class="btn btn-primary mt-3">Open Chapter</a>
+        </div>
+      </div>
+    {% endfor %}
+    {% if not subject.chapters %}
+      <div class="col-12"><div class="alert alert-warning">No chapters yet for this subject.</div></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

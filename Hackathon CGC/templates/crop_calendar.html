@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Calendar - KisanSeva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-primary: #2F6B3D;
+            --green-light: #4A8F5A;
+            --green-dark: #1E4A2A;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --white: #ffffff;
+            --bg-light: #F8F9FA;
+            --border-light: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--green-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+            font-weight: 900;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .filters {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--green-primary);
+            background: white;
+        }
+
+        .crops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .crop-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .crop-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(47,107,61,0.15);
+        }
+
+        .crop-header {
+            background: linear-gradient(135deg, var(--green-primary), var(--green-light));
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .crop-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .crop-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .season-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .crop-body {
+            padding: 2rem;
+        }
+
+        .timeline {
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--green-primary), var(--green-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .timeline-content h4 {
+            color: var(--green-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .region-tag {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .tips-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .tips-section h2 {
+            color: var(--green-primary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tip-card {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--green-primary);
+        }
+
+        .tip-card h4 {
+            color: var(--green-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .tip-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .crops-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+
+        <div class="header">
+            <h1>📅 Smart Crop Calendar</h1>
+            <p>Personalized planting schedules based on your location, climate, and traditional farming practices</p>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="regionFilter">Select Your Region</label>
+                <select id="regionFilter" class="filter-select" onchange="filterCrops()">
+                    <option value="All">All Regions</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="UP">Uttar Pradesh</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="seasonFilter">Select Season</label>
+                <select id="seasonFilter" class="filter-select" onchange="filterCrops()">
+                    <option value="All">All Seasons</option>
+                    <option value="Rabi">Rabi (Winter)</option>
+                    <option value="Kharif">Kharif (Monsoon)</option>
+                    <option value="Zaid">Zaid (Summer)</option>
+                    <option value="Year-round">Year-round</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="crops-grid" id="cropsGrid">
+            <!-- Crops will be dynamically loaded here -->
+        </div>
+
+        <div class="tips-section">
+            <h2>💡 Traditional Farming Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>Moon Phase Planting</h4>
+                    <p>Traditional farmers plant root crops during waning moon and leaf crops during waxing moon for better yields.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Companion Planting</h4>
+                    <p>Plant marigolds with vegetables to naturally repel pests. Mustard planted near cabbage protects from insects.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Soil Testing</h4>
+                    <p>Check soil moisture by squeezing a handful. If it forms a ball but crumbles easily, it's perfect for planting.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Crop Rotation</h4>
+                    <p>Rotate crops yearly: Follow rice with legumes, then wheat. This maintains soil fertility naturally.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Water Management</h4>
+                    <p>Water early morning or evening. Mid-day watering wastes water through evaporation and can burn plants.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Seed Selection</h4>
+                    <p>Choose local varieties adapted to your climate. They resist local pests better and need less care.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cropData = [
+            {
+                name: 'Wheat (गेहूं)',
+                icon: '🌾',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'March - April',
+                regions: ['Punjab', 'Haryana', 'UP', 'Rajasthan'],
+                tips: 'Best grown in loamy soil with good drainage. Requires 3-5 irrigations during growth.'
+            },
+            {
+                name: 'Rice (धान)',
+                icon: '🌾',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'October - November',
+                regions: ['Punjab', 'Haryana', 'West Bengal', 'UP'],
+                tips: 'Requires standing water during early growth. Transplant seedlings at 25-30 days.'
+            },
+            {
+                name: 'Cotton (कपास)',
+                icon: '☁️',
+                season: 'Kharif',
+                planting: 'April - May',
+                harvest: 'October - December',
+                regions: ['Gujarat', 'Maharashtra', 'Punjab', 'Haryana'],
+                tips: 'Deep tilling needed. Protect from bollworm using pheromone traps.'
+            },
+            {
+                name: 'Sugarcane (गन्ना)',
+                icon: '🎋',
+                season: 'Year-round',
+                planting: 'February - March',
+                harvest: 'December - March',
+                regions: ['UP', 'Maharashtra', 'Punjab'],
+                tips: 'Plant healthy setts with 3 buds. Requires heavy irrigation and fertilization.'
+            },
+            {
+                name: 'Mustard (सरसों)',
+                icon: '🌼',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'February - March',
+                regions: ['Rajasthan', 'Haryana', 'UP', 'Punjab'],
+                tips: 'Drought-resistant crop. Harvest when 75% pods turn brown.'
+            },
+            {
+                name: 'Potato (आलू)',
+                icon: '🥔',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'January - February',
+                regions: ['UP', 'West Bengal', 'Punjab', 'Haryana'],
+                tips: 'Earthing up is crucial. Protect from late blight with proper spacing.'
+            },
+            {
+                name: 'Maize (मक्का)',
+                icon: '🌽',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'September - October',
+                regions: ['Punjab', 'UP', 'Rajasthan', 'Haryana'],
+                tips: 'Requires well-drained soil. Apply first irrigation at knee-high stage.'
+            },
+            {
+                name: 'Tomato (टमाटर)',
+                icon: '🍅',
+                season: 'Year-round',
+                planting: 'Various seasons',
+                harvest: '60-90 days after transplant',
+                regions: ['All'],
+                tips: 'Transplant seedlings at 25-30 days. Support plants with stakes.'
+            },
+            {
+                name: 'Onion (प्याज)',
+                icon: '🧅',
+                season: 'Rabi',
+                planting: 'November - December',
+                harvest: 'March - April',
+                regions: ['Maharashtra', 'Gujarat', 'UP', 'Punjab'],
+                tips: 'Stop watering 15 days before harvest. Cure bulbs in shade for storage.'
+            },
+            {
+                name: 'Chickpea (चना)',
+                icon: '🫘',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'March - April',
+                regions: ['Rajasthan', 'UP', 'Punjab', 'Haryana'],
+                tips: 'Nitrogen-fixing crop, improves soil. Requires minimal irrigation.'
+            },
+            {
+                name: 'Cabbage (पत्तागोभी)',
+                icon: '🥬',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'January - March',
+                regions: ['Punjab', 'Haryana', 'West Bengal', 'UP'],
+                tips: 'Transplant at 4-5 leaf stage. Protect from caterpillars using neem spray.'
+            },
+            {
+                name: 'Soybean (सोयाबीन)',
+                icon: '🫛',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'September - October',
+                regions: ['Maharashtra', 'Rajasthan', 'UP'],
+                tips: 'Inoculate seeds with Rhizobium. Well-drained soil essential.'
+            }
+        ];
+
+        function renderCrops(crops) {
+            const grid = document.getElementById('cropsGrid');
+            grid.innerHTML = '';
+
+            crops.forEach(crop => {
+                const card = document.createElement('div');
+                card.className = 'crop-card';
+                card.innerHTML = `
+                    <div class="crop-header">
+                        <div class="crop-icon">${crop.icon}</div>
+                        <h3>${crop.name}</h3>
+                        <span class="season-badge">${crop.season}</span>
+                    </div>
+                    <div class="crop-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-icon">🌱</div>
+                                <div class="timeline-content">
+                                    <h4>Planting Time</h4>
+                                    <p>${crop.planting}</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">🌾</div>
+                                <div class="timeline-content">
+                                    <h4>Harvest Time</h4>
+                                    <p>${crop.harvest}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 1rem;">${crop.tips}</p>
+                        <div class="region-tag">📍 ${crop.regions.join(', ')}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCrops() {
+            const region = document.getElementById('regionFilter').value;
+            const season = document.getElementById('seasonFilter').value;
+
+            let filtered = cropData;
+
+            if (region !== 'All') {
+                filtered = filtered.filter(crop => crop.regions.includes(region));
+            }
+
+            if (season !== 'All') {
+                filtered = filtered.filter(crop => crop.season === season);
+            }
+
+            renderCrops(filtered);
+        }
+
+        // Initial render
+        renderCrops(cropData);
+    </script>
+</body>
+</html>

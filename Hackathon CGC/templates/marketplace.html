@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Marketplace - KisanSeva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2D5016;
+            --accent-green: #4A7C2C;
+            --light-green: #7FA650;
+            --golden-yellow: #F4A416;
+            --cream: #FAF9F6;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--cream);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            color: white;
+            padding: 2rem 5%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            background: white;
+            padding: 1.5rem 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: var(--accent-green);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-green);
+            border-bottom-color: var(--primary-green);
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 5%;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-btn {
+            background: var(--cream);
+            border: 2px solid #e0e0e0;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        /* Cart Modal Styles */
+        .cart-box {
+            position: fixed;
+            top: 38px;
+            right: 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 5px 26px #2d501652;
+            padding: 2em 2.2em 1em 2.2em;
+            min-width: 320px;
+            min-height: 80px;
+            z-index: 1010;
+            display: none;
+            font-size: 1em;
+        }
+        .cart-title {
+            font-weight: 700;
+            color: #2d5016;
+            font-size: 1.16em; margin-bottom: 0.84em;
+        }
+        .cart-close {
+            position: absolute;
+            top: 0.8em;
+            right: 1.2em;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #4A7C2C;
+        }
+        .cart-items {
+            list-style: none;
+            padding: 0; margin: 0 0 0.9em 0;
+        }
+        .cart-items li {
+            display: flex; align-items: center; gap: 0.7em;
+            border-bottom: 1px solid #ececec; padding: 0.5em 0;
+        }
+        .cart-remove-btn {
+            margin-left: auto;
+            background: #ffe7e7;
+            color: #d02424;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.98em;
+            padding: 0.2em 0.7em;
+            cursor: pointer;
+        }
+        .cart-footer {
+            text-align: right; margin-top: 1.1em;
+        }
+        .cart-footer button {
+            background: linear-gradient(135deg, #2D5016, #4A7C2C);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.5em 1.2em;
+        }
+        .cart-footer .clear-btn {
+            background: #e2e1e1;
+            color: #2D5016;
+            margin-right: 0.99em;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-green);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .product-badge.organic {
+            background: var(--accent-green);
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-info h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .product-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        .product-price .old-price {
+            font-size: 1rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .product-rating {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--accent-green);
+        }
+
+        .sell-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .upload-images-zone {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            background: var(--cream);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45,80,22,0.3);
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.shipped {
+            background: rgba(244, 164, 22, 0.15);
+            color: #c58200;
+        }
+
+        .status-badge.delivered {
+            background: rgba(45, 80, 22, 0.15);
+            color: var(--primary-green);
+        }
+
+        .order-items {
+            padding: 1.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .order-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .order-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-item-info strong {
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .order-item-info span {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-item-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            background: var(--cream);
+        }
+
+        .order-footer span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .track-btn, .review-btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .track-btn:hover, .review-btn:hover {
+            background: var(--accent-green);
+        }
+
+        @media (max-width: 968px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🛒 Agro Marketplace</h1>
+            <a href="javascript:history.back()" class="back-btn">← Back to Home</a>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('buy')">Buy Products</button>
+            <button class="tab-btn" onclick="switchTab('sell')">Sell Produce</button>
+            <button class="tab-btn" onclick="switchTab('orders')">My Orders</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Buy Products Tab -->
+        <div id="buyTab" class="tab-content active">
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+                <button class="filter-btn" onclick="filterProducts('traps')">Solar Traps</button>
+                <button class="filter-btn" onclick="filterProducts('lure')">Lure</button>
+                <button class="filter-btn" onclick="filterProducts('addon')">Add-On</button>
+                <button class="filter-btn" onclick="filterProducts('fertilizer')">Fertilizers</button>
+            </div>
+
+                <!-- Main Trap Product -->
+            <div class="products-grid" id="productsGrid">
+                <div class="product-card" data-category="traps">
+                    <img src="/static/trap_realV2.jpg" alt="Solar insect trap" style="height: 280px; width: 100%; object-fit: contain; background: #f6f5ed;">
+                    <div class="product-badge">Featured</div>
+                    <div class="product-info">
+                        <h4>Solar-Powered Insect Trap</h4>
+                        <p>10W panel, UV LED, 1+ acre coverage</p>
+                        <div class="product-price">
+                            <span class="price">₹2,999</span>
+                            <span class="old-price">₹3,500</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Solar Insect Trap Pro', 2999)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Wind Add-On -->
+        <div class="product-card" data-category="addon">
+            <img src="https://www.windustry.com/image/vertical-axis-wind-turbines.jpg" alt="Wind power add-on">
+            <div class="product-badge addon">Add-On</div>
+            <div class="product-info">
+              <h4>Wind Power Add-On</h4>
+              <p>Vertical Axis Wind Turbine, mounts beside trap for extra cloudy/windy days.</p>
+              <div class="product-price">
+                 <span class="price">₹2,900</span>
+             </div>
+             <button class="add-to-cart-btn" onclick="addToCart('Wind Power Add-On', 2900)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">For: Solar Trap Owners<br>Use: All crops, plug & play</div>
+            </div>
+        </div>
+
+                <!-- AC Charger Add-On -->
+    <div class="product-card" data-category="addon">
+        <img src="https://5.imimg.com/data5/SELLER/Default/2023/2/XG/IQ/LO/1364322/uniteh-black-power-cords.JPG" alt="AC Charger Add-On">
+        <div class="product-badge addon">Add-On</div>
+        <div class="product-info">
+            <h4>AC Charging Cord Add-On</h4>
+            <p>12V smart charger to recharge battery from household socket during rain/clouds.</p>
+            <div class="product-price">
+                <span class="price">₹250</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('AC Charger Add-On', 650)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">For: Solar Trap Owners<br>Use: All crops, easy plug-in</div>
+        </div>
+    </div>
+
+                <div class="product-card" data-category="fertilizer">
+                    <img src="https://5.imimg.com/data5/SELLER/Default/2023/10/354303715/VX/ST/GV/4815803/neem-powder-organic-fertilizer-1000x1000.jpeg" alt="Organic fertilizer">
+                    <div class="product-badge organic">Organic</div>
+                    <div class="product-info">
+                        <h4>Neem Organic Fertilizer</h4>
+                        <p>100% natural, 25kg bag</p>
+                        <div class="product-price">
+                            <span class="price">₹650</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Neem Organic Fertilizer', 650)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="traps">
+                    <img src="https://5.imimg.com/data5/PJ/VP/XL/SELLER-55273776/fruit-fly-trap.jpg" alt="Pheromone trap">
+                    <div class="product-info">
+                        <h4>Pheromone Trap Set</h4>
+                        <p>Pack of 10 traps with lures</p>
+                        <div class="product-price">
+                            <span class="price">₹1,200</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Pheromone Trap Set', 1200)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Lure: Neem Oil for Wheat -->
+    <div class="product-card" data-category="lure">
+        <img src="https://dujjhct8zer0r.cloudfront.net/media/prod_image/6165543251748071521.jpeg" alt="Neem Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Neem Oil Lure</h4>
+            <p>Specially for: Wheat</p>
+            <div class="product-price">
+                <span class="price">₹250</span>
+                <span class="old-price">₹350</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Neem Oil Lure', 250)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: ½–1 L / acre<br>
+                Refill: every 14 days
+            </div>
+        </div>
+    </div>
+
+    <!-- Lure: Lemongrass/Citronella for Rice -->
+    <div class="product-card" data-category="lure">
+        <img src="https://www.lmching.com/cdn/shop/files/NewProject-659_fd20831d-0dfc-4844-a531-e1dbfea8e2a7_540x.jpg?v=1751507942" alt="Lemongrass Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Lemongrass & Citronella Lure</h4>
+            <p>Specially for: Rice</p>
+            <div class="product-price">
+                <span class="price">₹240</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Lemongrass & Citronella Lure', 240)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: ½ L / acre<br>
+                Refill: every 10 days
+            </div>
+        </div>
+    </div>
+
+    <!-- Lure: Garlic/Basil/Marigold for Cotton -->
+    <div class="product-card" data-category="lure">
+        <img src="https://m.media-amazon.com/images/I/71yT+W99VWL._AC_UF1000,1000_QL80_.jpg" alt="Basil Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Garlic-Basil-Marigold Lure</h4>
+            <p>Specially for: Cotton</p>
+            <div class="product-price">
+                <span class="price">₹300</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Garlic-Basil-Marigold Lure', 300)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: 1 L / acre<br>
+                Refill: every 14 days
+            </div>
+        </div>
+    </div>
+
+    <!-- Lure: Peppermint/Camphor for Maize -->
+    <div class="product-card" data-category="lure">
+        <img src="https://tiimg.tistatic.com/fp/2/008/921/fall-army-worm-pheromone-lure-105.jpg" alt="Peppermint Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Peppermint & Camphor Lure</h4>
+            <p>Specially for: Maize</p>
+            <div class="product-price">
+                <span class="price">₹245</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Peppermint & Camphor Lure', 245)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: ½ L / acre<br>
+                Refill: every 10 days
+            </div>
+        </div>
+    </div>
+
+
+                <!-- Lure: Clove/Rosemary for Sugarcane -->
+    <div class="product-card" data-category="lure">
+        <img src="https://greenrevolution.blob.core.windows.net/images/65366b2b-69a9-4520-9cfe-268c4cd61cc4.jpg" alt="Clove-Rosemary Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Clove & Rosemary Lure</h4>
+            <p>Specially for: Sugarcane</p>
+            <div class="product-price">
+                <span class="price">₹320</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Clove & Rosemary Lure', 320)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: 1 L / acre<br>
+                Refill: every 10–15 days
+            </div>
+        </div>
+    </div>
+
+    <!-- Lure: Mint/Tulsi/Ginger Oil for Vegetables -->
+    <div class="product-card" data-category="lure">
+        <img src="https://5.imimg.com/data5/SELLER/Default/2023/6/316228982/QK/BM/AE/143814374/barric-catch-vegetable-fly-lure-500x500.JPG" alt="Clove-Rosemary Lure">
+        <div class="product-badge lure">Lure</div>
+        <div class="product-info">
+            <h4>Mint-Tulsi-Ginger Oil Lure</h4>
+            <p>Specially for: Vegetables</p>
+            <div class="product-price">
+                <span class="price">₹245</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('Mint-Tulsi-Ginger Oil Lure', 245)">Add to Cart</button>
+            <div style="color: #4A7C2C; font-size: 0.98rem; margin-top: 0.7rem;">
+                Use: 1 L / acre<br>
+                Refill: every 10 days
+            </div>
+        </div>
+    </div>
+
+
+            </div>
+        </div>
+
+        <!-- Sell Produce Tab -->
+        <div id="sellTab" class="tab-content">
+            <h2 style="margin-bottom: 1rem; color: var(--primary-green);">List Your Farm Produce</h2>
+            <p style="color: var(--text-light); font-size: 1.1rem; margin-bottom: 2rem;">Sell directly to buyers with fair pricing and no middlemen.</p>
+
+            <div class="sell-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="productName" placeholder="e.g., Organic Wheat" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="productCategory" class="form-control">
+                            <option>Select Category</option>
+                            <option>Grains & Cereals</option>
+                            <option>Vegetables</option>
+                            <option>Fruits</option>
+                            <option>Pulses</option>
+                            <option>Organic Produce</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantity Available (kg) *</label>
+                        <input type="number" id="productQuantity" placeholder="1000" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Price per kg (₹) *</label>
+                        <input type="number" id="productPrice" placeholder="25" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Product Description *</label>
+                    <textarea id="productDescription" rows="4" placeholder="Describe your produce quality, farming method, etc." class="form-control"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Product Images</label>
+                    <div class="upload-images-zone">
+                        <input type="file" multiple accept="image/*" style="display: none;" id="produceImages">
+                        <button class="btn" onclick="document.getElementById('produceImages').click()">📷 Choose Images</button>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-light);">Upload up to 5 images</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="isOrganic">
+                        <span>This is organically grown produce</span>
+                    </label>
+                </div>
+
+                <button class="btn" onclick="submitProduce()" style="width: 100%; padding: 1.2rem; font-size: 1.1rem;">List Product for Sale</button>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h4 style="color: var(--primary-green); margin-bottom: 1rem;">💡 Seller Benefits</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.5rem 0;">✓ Direct connection with buyers - No middlemen</li>
+                    <li style="padding: 0.5rem 0;">✓ Get fair market prices for your produce</li>
+                    <li style="padding: 0.5rem 0;">✓ Free listing for the first 3 months</li>
+                    <li style="padding: 0.5rem 0;">✓ Secure payment directly to your bank</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- My Orders Tab -->
+        <div id="ordersTab" class="tab-content">
+            <h2 style="margin-bottom: 1rem; color: var(--primary-green);">Your Orders</h2>
+            <p style="color: var(--text-light); font-size: 1.1rem; margin-bottom: 2rem;">Track and manage all your marketplace orders.</p>
+
+            <div class="orders-list">
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <strong>Order #KS-2025-001</strong>
+                            <span style="color: var(--text-light); font-size: 0.9rem; margin-left: 1rem;">Placed on Oct 20, 2025</span>
+                        </div>
+                        <span class="status-badge shipped">Shipped</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="/static/trap_real.jpg" alt="Product">
+                            <div class="order-item-info">
+                                <strong>Solar-Powered Insect Trap</strong>
+                                <span>Quantity: 2</span>
+                            </div>
+                            <div class="order-item-price">₹5,998</div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <span>Total: ₹5,998</span>
+                        <button class="track-btn" onclick="trackOrder('KS-2025-001')">Track Order</button>
+                    </div>
+                </div>
+
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <strong>Order #KS-2025-002</strong>
+                            <span style="color: var(--text-light); font-size: 0.9rem; margin-left: 1rem;">Placed on Oct 18, 2025</span>
+                        </div>
+                        <span class="status-badge delivered">Delivered</span>
+                    </div>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="https://dujjhct8zer0r.cloudfront.net/media/prod_image/6165543251748071521.jpeg" alt="Product">
+                            <div class="order-item-info">
+                                <strong>Neem Oil Lure</strong>
+                                <span>Quantity: 3L </span>
+                            </div>
+                            <div class="order-item-price">₹750</div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <span>Total: ₹1,850</span>
+                        <button class="review-btn" onclick="writeReview('HD2967 Wheat Seeds')">Write Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function addToCart(productName, price) {
+            alert('✅ Added to Cart!\n\n' + productName + '\nPrice: ₹' + price + '\n\nYou can proceed to checkout from the cart page.');
+        }
+
+        function submitProduce() {
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const quantity = document.getElementById('productQuantity').value.trim();
+            const price = document.getElementById('productPrice').value.trim();
+            const description = document.getElementById('productDescription').value.trim();
+
+            if (!name || category === 'Select Category' || !quantity || !price || !description) {
+                alert('❌ Please fill in all required fields');
+                return;
+            }
+
+            alert('✅ Product Listed Successfully!\n\n' +
+                  'Your produce "' + name + '" has been listed on KisanSeva Marketplace.\n\n' +
+                  'Buyers will be able to see and purchase it. You\'ll receive notifications when orders are placed.\n\n' +
+                  'Thank you for using KisanSeva! 🌾');
+
+            // Clear form
+            document.getElementById('productName').value = '';
+            document.getElementById('productCategory').value = 'Select Category';
+            document.getElementById('productQuantity').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('isOrganic').checked = false;
+        }
+
+        function trackOrder(orderId) {
+            alert('📦 Order Tracking - ' + orderId + '\n\n' +
+                  'Status: Shipped\n' +
+                  'Expected Delivery: Oct 24, 2025\n' +
+                  'Courier: BlueDart\n' +
+                  'Tracking ID: BD' + orderId + '\n\n' +
+                  'Your order is on the way!');
+        }
+
+        function writeReview(productName) {
+            alert('⭐ Write Review for:\n' + productName + '\n\n' +
+                  'This feature will let you rate and review products you\'ve purchased.\n\n' +
+                  'Your feedback helps other farmers make better choices!');
+        }
+    </script>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🛒 Agro Marketplace</h1>
+            <a href="javascript:history.back()" class="back-btn">← Back to Home</a>
+            <button onclick="toggleCart()" class="btn" style="margin-left:2em;font-size:1.05em;">
+                🛒 Cart (<span id="cartCount">0</span>)
+            </button>
+        </div>
+    </div>
+    <div id="cartBox" class="cart-box">
+        <section>
+            <span class="cart-title">Your Cart</span>
+            <span class="cart-close" onclick="toggleCart()">&times;</span>
+        </section>
+        <ul id="cartItems" class="cart-items"></ul>
+        <div class="cart-footer">
+            <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+            <button onclick="checkoutCart()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Your tabs, products, forms and content go below. No changes needed unless you want to add a Cart elsewhere too -->
+    <!-- --- COPY ALL YOUR EXISTING TABS AND PRODUCT HTML HERE --- -->
+    <!-- ... [For brevity, only the JS that must be updated is shown, paste all product HTML as is above here] ... -->
+
+    <script>
+        // --- CART LOGIC ---
+        function getCart() {
+            return JSON.parse(localStorage.getItem('kisanCart') || '[]');
+        }
+        function setCart(cart) {
+            localStorage.setItem('kisanCart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = getCart().reduce((a, c) => a + c.qty, 0);
+        }
+        function addToCart(name, price) {
+            let cart = getCart();
+            let idx = cart.findIndex(item => item.name === name && item.price === price);
+            if (idx > -1) {
+                cart[idx].qty += 1;
+            } else {
+                cart.push({name, price, qty: 1});
+            }
+            setCart(cart);
+            showCart();
+        }
+        function removeFromCart(idx) {
+            let cart = getCart();
+            cart.splice(idx, 1);
+            setCart(cart);
+            showCart();
+        }
+        function clearCart() {
+            localStorage.removeItem('kisanCart');
+            showCart();
+        }
+        function showCart() {
+            let cart = getCart();
+            let itemsList = document.getElementById('cartItems');
+            itemsList.innerHTML = '';
+            if (cart.length === 0) {
+                itemsList.innerHTML = "<li style='color:#888;'>Your cart is empty.</li>";
+            } else {
+                cart.forEach((item, idx) => {
+                    itemsList.innerHTML += `
+                        <li>
+                            <span style="font-weight:600;">${item.name}</span>
+                            <span style="color:#347a18;">₹${item.price}</span>
+                            <span style="font-size:0.96em;color:#777;">x${item.qty}</span>
+                            <button class="cart-remove-btn" onclick="removeFromCart(${idx})">Remove</button>
+                        </li>
+                    `;
+                });
+            }
+            document.getElementById('cartBox').style.display = "block";
+            updateCartCount();
+        }
+        function toggleCart() {
+            let cartBox = document.getElementById('cartBox');
+            if (cartBox.style.display === "block") {
+                cartBox.style.display = "none";
+            } else {
+                showCart();
+            }
+        }
+        function checkoutCart() {
+            let cart = getCart();
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            let total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            alert("🛒 Checkout!\n\nThank you for your purchase!\nYour order will be processed.\n\nTotal: ₹" + total);
+            clearCart();
+            toggleCart();
+        }
+        window.addEventListener('DOMContentLoaded', updateCartCount);
+
+        // ==== REST OF YOUR JS UNCHANGED =====
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        function submitProduce() {
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const quantity = document.getElementById('productQuantity').value.trim();
+            const price = document.getElementById('productPrice').value.trim();
+            const description = document.getElementById('productDescription').value.trim();
+            if (!name || category === 'Select Category' || !quantity || !price || !description) {
+                alert('❌ Please fill in all required fields');
+                return;
+            }
+            alert('✅ Product Listed Successfully!\n\n' +
+                  'Your produce "' + name + '" has been listed on KisanSeva Marketplace.\n\n' +
+                  'Buyers will be able to see and purchase it. You\'ll receive notifications when orders are placed.\n\n' +
+                  'Thank you for using KisanSeva! 🌾');
+            document.getElementById('productName').value = '';
+            document.getElementById('productCategory').value = 'Select Category';
+            document.getElementById('productQuantity').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('isOrganic').checked = false;
+        }
+        function trackOrder(orderId) {
+            alert('📦 Order Tracking - ' + orderId + '\n\n' +
+                  'Status: Shipped\n' +
+                  'Expected Delivery: Oct 24, 2025\n' +
+                  'Courier: BlueDart\n' +
+                  'Tracking ID: BD' + orderId + '\n\n' +
+                  'Your order is on the way!');
+        }
+        function writeReview(productName) {
+            alert('⭐ Write Review for:\n' + productName + '\n\n' +
+                  'This feature will let you rate and review products you\'ve purchased.\n\n' +
+                  'Your feedback helps other farmers make better choices!');
+        }
+    </script>
+
+</body>
+</html>

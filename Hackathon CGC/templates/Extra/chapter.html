@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ chapter.name }}</h2>
+<p class="lead">{{ chapter.content }}</p>
+
+<div class="mb-3">
+  <a href="{{ url_for('download_pdf', chapter_id=chapter.id) }}" class="btn btn-success btn-sm">Download PDF</a>
+  <a href="{{ url_for('quiz', chapter_id=chapter.id) }}" class="btn btn-info btn-sm">Take Quiz</a>
+</div>
+
+{% if current_user.is_admin %}
+  <div class="card card-body mb-4 border-warning">
+    <h5 class="text-warning">Edit Chapter Content (Admin Only)</h5>
+    <form method="POST" action="{{ url_for('chapter', chapter_id=chapter.id) }}">
+      <textarea name="content" class="form-control mb-2" rows="4">{{ chapter.content }}</textarea>
+      <button type="submit" class="btn btn-warning btn-sm">Save Changes</button>
+    </form>
+  </div>
+{% endif %}
+
+<div class="card card-body mt-3">
+  <h4>Your Notes</h4>
+  {% if not current_user.is_admin %}
+  <form method="POST" class="mb-3">
+    <textarea name="note" class="form-control" rows="3"></textarea>
+    <button type="submit" class="btn btn-secondary mt-2">Add Note</button>
+  </form>
+  {% endif %}
+  <ul class="list-group">
+    {% for note in notes %}
+      <li class="list-group-item">{{ note.text }}</li>
+    {% else %}
+      <li class="list-group-item">No notes yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

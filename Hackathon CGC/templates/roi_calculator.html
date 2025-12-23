@@ -84,7 +84,7 @@
 
         .card-title {
             font-size: 2rem;
-            color: var(--green-primary);
+            color: var(--green);
             margin-bottom: 2rem;
             font-weight: 700;
             display: flex;
@@ -307,14 +307,14 @@
         <a href="/" class="back-link">← Back to Home</a>
 
         <div class="header">
-            <h1>🧮 ROI Calculator</h1>
+            <h1>ROI Calculator</h1>
             <p>Calculate your savings from switching to eco-friendly solar-powered pest control</p>
         </div>
 
         <div class="calculator-grid">
             <!-- Input Section -->
             <div class="input-card">
-                <h2 class="card-title">📝 Enter Your Farm Details</h2>
+                <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notepad-text-icon lucide-notepad-text"><path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/><rect width="16" height="18" x="4" y="4" rx="2"/><path d="M8 10h6"/><path d="M8 14h8"/><path d="M8 18h5"/></svg> Enter Your Farm Details</h2>
 
                 <div class="input-group">
                     <label for="farmSize">Farm Size (in acres)</label>
@@ -336,23 +336,23 @@
                 <div class="input-group">
                     <label for="pesticideCost">Current Annual Pesticide Cost (₹)</label>
                     <input type="number" id="pesticideCost" min="1000" max="100000" step="500" value="15000" oninput="calculateROI()">
-                    <p class="input-hint">Average: ₹10,000 - ₹20,000 per year</p>
+                    <p class="input-hint">Average: ₹10,000 - ₹20,000 per acre / year</p>
                 </div>
 
                 <div class="input-group">
                     <label for="applications">Pesticide Applications per Year</label>
                     <input type="number" id="applications" min="1" max="12" value="4" oninput="calculateROI()">
-                    <p class="input-hint">Typical: 3-6 applications annually</p>
+                    <p class="input-hint">Typical: 2-4 applications annually</p>
                 </div>
 
                 <button class="calculate-btn" onclick="calculateROI()">
-                    Calculate Savings 💰
+                    Calculate Savings <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-indian-rupee-icon lucide-indian-rupee"><path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/></svg>
                 </button>
             </div>
 
             <!-- Results Section -->
             <div class="results-card">
-                <h2 class="card-title">📊 Your Potential Savings</h2>
+                <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-no-axes-combined-icon lucide-chart-no-axes-combined"><path d="M12 16v5"/><path d="M16 14v7"/><path d="M20 10v11"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18v3"/><path d="M8 14v7"/></svg> Your Potential Savings</h2>
 
                 <div class="result-item">
                     <div class="result-label">Solar Trap Investment</div>
@@ -382,10 +382,10 @@
 
         <!-- Comparison Section -->
         <div class="comparison-section">
-            <h2 class="card-title">⚖️ Traditional vs Solar Pest Control</h2>
+            <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale-icon lucide-scale"><path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/></svg> Traditional vs Solar Pest Control</h2>
             <div class="comparison-grid">
                 <div class="comparison-card traditional">
-                    <h4>🚜 Traditional Pesticides</h4>
+                    <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tractor-icon lucide-tractor"><path d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"/><path d="M16 18h-5"/><path d="M18 5a1 1 0 0 0-1 1v5.573"/><path d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"/><path d="M4 11V4"/><path d="M7 15h.01"/><path d="M8 10.1V4"/><circle cx="18" cy="18" r="2"/><circle cx="7" cy="15" r="5"/></svg> Traditional Pesticides</h4>
                     <ul class="comparison-list">
                         <li>Recurring monthly/quarterly costs</li>
                         <li>Harmful chemicals affect soil health</li>
@@ -396,7 +396,7 @@
                     </ul>
                 </div>
                 <div class="comparison-card solar">
-                    <h4>☀️ Solar-Powered Traps</h4>
+                    <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-icon lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg> Solar-Powered Traps</h4>
                     <ul class="comparison-list">
                         <li>One-time investment, 5+ years lifespan</li>
                         <li>100% chemical-free, safe for soil</li>

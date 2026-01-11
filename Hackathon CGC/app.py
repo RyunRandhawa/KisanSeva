@@ -18,7 +18,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 db = SQLAlchemy(app)
 
 # PASSWORD PROTECTION
-SITE_PASSWORD = "KisanCrivacersSEVA123"  
+SITE_PASSWORD = "KisanCrivacersSEVA"  
 
 def check_password(f):
     @wraps(f)

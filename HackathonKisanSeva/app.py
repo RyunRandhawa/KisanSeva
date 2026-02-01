@@ -343,33 +343,60 @@ def language_support():
 def product_details():
     return render_template('product_details.html', username=session.get('user'))
 
-if __name__ == '__main__':
+
+
+# ✅ Ensure upload folder always exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# ✅ Create database tables safely (works on Render + local)
+with app.app_context():
+    db.create_all()
+
+# -------------------------------------------------
+# ✅ OPTIONAL: Run seeding ONLY when running locally
+# -------------------------------------------------
+if __name__ == "__main__":
+
     with app.app_context():
-        db.create_all()
+
+        # Seed Crop Calendar (only once)
         if CropCalendar.query.count() == 0:
             for c in CROP_CALENDAR_DATA:
                 db.session.add(CropCalendar(
-                    crop_name=c['crop'], season=c['season'],
-                    planting_month=c['plant'], harvest_month=c['harvest'],
+                    crop_name=c['crop'],
+                    season=c['season'],
+                    planting_month=c['plant'],
+                    harvest_month=c['harvest'],
                     region=c['region']
                 ))
+            db.session.commit()
+            print("✅ Crop Calendar Seeded!")
 
+        # Seed Marketplace Listings (only once)
         if MarketplaceListing.query.count() == 0:
             sample = [
                 MarketplaceListing(
-                    user_id=1, title='Solar Insect Trap', category='trap',
-                    price=3200, description='10W solar panel, UV LED, 12V battery',
-                    stock=25, location='Punjab'
+                    user_id=1,
+                    title='Solar Insect Trap',
+                    category='trap',
+                    price=3200,
+                    description='10W solar panel, UV LED, 12V battery',
+                    stock=25,
+                    location='Punjab'
                 ),
                 MarketplaceListing(
-                    user_id=1, title='Organic Fertilizer (50kg)', category='tools',
-                    price=850, description='Pure organic compost', stock=100, location='Haryana'
+                    user_id=1,
+                    title='Organic Fertilizer (50kg)',
+                    category='tools',
+                    price=850,
+                    description='Pure organic compost',
+                    stock=100,
+                    location='Haryana'
                 )
             ]
             db.session.add_all(sample)
             db.session.commit()
-            print("✅ Database seeded with sample data!")
+            print("✅ Marketplace Seeded!")
 
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    # ✅ Local development only (Render ignores this)
+    app.run(debug=True)

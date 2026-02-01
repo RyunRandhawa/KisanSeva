@@ -391,9 +391,3 @@ if __name__ == "__main__":
             db.session.add_all(sample)
             db.session.commit()
             print("✅ Marketplace seeded!")
-
-    # ✅ Render provides PORT dynamically
-    port = int(os.environ.get("PORT", 5000))
-
-    # ✅ Run app on public host (required for deployment)
-    app.run(host="0.0.0.0", port=port)

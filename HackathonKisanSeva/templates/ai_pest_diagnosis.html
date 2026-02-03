@@ -384,7 +384,7 @@
         <a href="/" class="back-link">← Back to Home</a>
 
         <div class="header">
-            <h1>🔬 AI Pest Diagnosis</h1>
+            <h1>AI Pest Diagnosis</h1>
             <p>Upload your crop photos and get instant pest identification with treatment recommendations</p>
         </div>
 
@@ -392,7 +392,7 @@
             <!-- Upload Section -->
             <div id="uploadSection">
                 <div class="upload-zone" id="dropZone">
-                    <div class="upload-icon">📸</div>
+                    <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="95" height="95" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera-icon lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg></div>
                     <h3>Upload Your Crop Photo</h3>
                     <p>Drag and drop an image here, or click the button below</p>
                     <input type="file" id="fileInput" accept="image/*" style="display: none;">
@@ -401,25 +401,26 @@
                     </button>
                 </div>
 
+                
                 <div class="sample-section">
                     <h4>Or try with sample crop images:</h4>
                     <div class="sample-images">
-                        <div class="sample-card" onclick="analyzeSample('Aphids', 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600')">
-                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600" alt="Aphid infestation">
+                        <div class="sample-card" onclick="analyzeSample('Aphids', 'https://treesunlimitednj.com/wp-content/uploads/Aphid-Infestation-on-Elder-1200x675.jpg')">
+                            <img src="https://treesunlimitednj.com/wp-content/uploads/Aphid-Infestation-on-Elder-1200x675.jpg" alt="Aphid infestation">
                             <div class="sample-card-content">
                                 <h5>Aphid Infestation</h5>
                                 <p>Common in wheat and vegetable crops</p>
                             </div>
                         </div>
-                        <div class="sample-card" onclick="analyzeSample('Leaf Blight', 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=600')">
-                            <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=600" alt="Leaf disease">
+                        <div class="sample-card" onclick="analyzeSample('Leaf Blight', 'https://soybeanresearchinfo.com/wp-content/uploads/2019/02/cercospora-Adam-Sisson-1300x975.jpg')">
+                            <img src="https://soybeanresearchinfo.com/wp-content/uploads/2019/02/cercospora-Adam-Sisson-1300x975.jpg" alt="Leaf disease">
                             <div class="sample-card-content">
                                 <h5>Leaf Blight Disease</h5>
                                 <p>Fungal disease in rice and wheat</p>
                             </div>
                         </div>
-                        <div class="sample-card" onclick="analyzeSample('Caterpillar', 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600')">
-                            <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600" alt="Pest damage">
+                        <div class="sample-card" onclick="analyzeSample('Caterpillar', 'http://assets.clevelandclinic.org/transform/ec4d4ff9-c484-41c7-8cbb-ddb6fae1e8e0/gypsy-moth-caterpillar-501036952')">
+                            <img src="http://assets.clevelandclinic.org/transform/ec4d4ff9-c484-41c7-8cbb-ddb6fae1e8e0/gypsy-moth-caterpillar-501036952" alt="Pest damage">
                             <div class="sample-card-content">
                                 <h5>Caterpillar Damage</h5>
                                 <p>Common in cotton and vegetables</p>

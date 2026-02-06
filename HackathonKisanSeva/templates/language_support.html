@@ -127,9 +127,18 @@
         }
 
         .language-flag {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            display: block;
+            font-size: 3rem;        /* smaller */
+            font-weight: 800;       /* bold */
+            margin-bottom: 1rem;    /* tighter spacing */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70px;           /* keeps alignment perfect */
+            color: var(--primary-green);
+
+        }
+        .language-card.active .language-flag {
+            color: white;
         }
 
         .language-card h3 {
@@ -365,7 +374,7 @@
 
         .coming-soon-card {
             background: var(--bg-light);
-            border: 2px dashed var(--border-light);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 15px;
             padding: 2rem 1rem;
             text-align: center;
@@ -487,35 +496,35 @@
 
         <div class="language-grid">
             <div class="language-card active" onclick="switchLanguage('en')">
-                <span class="language-flag">🇬🇧</span>
+                <span class="language-flag">EN</span>
                 <h3>English</h3>
                 <p>Full platform access in English with comprehensive feature support</p>
                 <div class="language-status">Currently Active</div>
             </div>
 
             <div class="language-card" onclick="switchLanguage('hi')">
-                <span class="language-flag">🇮🇳</span>
+                <span class="language-flag">हि</span>
                 <h3>हिंदी</h3>
                 <p>हिंदी में पूर्ण प्लेटफॉर्म एक्सेस और सभी सुविधाओं का समर्थन</p>
                 <div class="language-status inactive">Available</div>
             </div>
 
             <div class="language-card" onclick="switchLanguage('pa')">
-                <span class="language-flag">🇮🇳</span>
+                <span class="language-flag">ਪੰ</span>
                 <h3>ਪੰਜਾਬੀ</h3>
                 <p>ਪੰਜਾਬੀ ਵਿੱਚ ਪੂਰਾ ਪਲੇਟਫਾਰਮ ਐਕਸੈਸ ਅਤੇ ਸਾਰੀਆਂ ਸੁਵਿਧਾਵਾਂ ਦਾ ਸਮਰਥਨ</p>
                 <div class="language-status inactive">Available</div>
             </div>
 
             <div class="language-card" onclick="switchLanguage('ta')">
-                <span class="language-flag">🇮🇳</span>
+                <span class="language-flag">த</span>
                 <h3>தமிழ்</h3>
                 <p>முழு இயங்குதள அணுகல் மற்றும் அனைத்து அம்சங்களின் ஆதரவு</p>
                 <div class="language-status inactive">Available</div>
             </div>
 
             <div class="language-card" onclick="switchLanguage('mr')">
-                <span class="language-flag">🇮🇳</span>
+                <span class="language-flag">म</span>
                 <h3>मराठी</h3>
                 <p>मराठीमध्ये संपूर्ण प्लॅटफॉर्म प्रवेश आणि सर्व वैशिष्ट्यांचे समर्थन</p>
                 <div class="language-status inactive">Available</div>
@@ -524,29 +533,29 @@
 
         <!-- Coming Soon Languages -->
         <div class="coming-soon-section">
-            <h3 class="coming-title">友    Expanding Language Support</h3>
+            <h3 class="coming-title">友 Expanding Language Support</h3>
             <p class="coming-desc">Supporting 10+ Indian languages by 2026</p>
             <div class="coming-soon-grid">
                 <div class="coming-soon-card">
-                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-flag">తె</span>
                     <h4>తెలుగు</h4>
                     <p>Telugu</p>
                     <span class="coming-badge">Coming Soon</span>
                 </div>
                 <div class="coming-soon-card">
-                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-flag">ಕ</span>
                     <h4>ಕನ್ನಡ</h4>
                     <p>Kannada</p>
                     <span class="coming-badge">Coming Soon</span>
                 </div>
                 <div class="coming-soon-card">
-                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-flag">ગુ</span>
                     <h4>ગુજરાતી</h4>
                     <p>Gujarati</p>
                     <span class="coming-badge">Coming Soon</span>
                 </div>
                 <div class="coming-soon-card">
-                    <span class="language-flag">🇮🇳</span>
+                    <span class="language-flag">বা</span>
                     <h4>বাংলা</h4>
                     <p>Bengali</p>
                     <span class="coming-badge">Coming Soon</span>
@@ -812,9 +821,9 @@
 
         function startVoiceDemo(lang) {
             const messages = {
-                'en': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-icon lucide-mic"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg> Voice Navigation Activated!\n\n"Welcome to KisanSeva voice assistance. You can now use voice commands to navigate."\n\nTry saying:\n• "Show pest diagnosis"\n• "Open marketplace"\n• "Check weather"\n• "Find farming tips"\n\nSpeak clearly for best results!',
-                'hi': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-icon lucide-mic"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg> आवाज़ नेविगेशन सक्रिय!\n\n"किसान सेवा वॉइस असिस्टेंट में आपका स्वागत है। अब आप वॉइस कमांड का उपयोग कर सकते हैं।"\n\nकहकर देखें:\n• "कीट निदान दिखाएं"\n• "बाज़ार खोलें"\n• "मौसम देखें"\n• "खेती के टिप्स खोजें"\n\nस्पष्ट बोलें!',
-                'pa': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-icon lucide-mic"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg> ਆਵਾਜ਼ ਨੈਵੀਗੇਸ਼ਨ ਸਰਗਰਮ!\n\n"ਕਿਸਾਨ ਸੇਵਾ ਵਾਇਸ ਸਹਾਇਕ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ। ਹੁਣ ਤੁਸੀਂ ਆਵਾਜ਼ ਕਮਾਂਡ ਦੀ ਵਰਤੋਂ ਕਰ ਸਕਦੇ ਹੋ।"\n\nਕਹਿ ਕੇ ਦੇਖੋ:\n• "ਕੀਟ ਨਿਦਾਨ ਵਿਖਾਓ"\n• "ਬਾਜ਼ਾਰ ਖੋਲ੍ਹੋ"\n• "ਮੌਸਮ ਵੇਖੋ"\n• "ਖੇਤੀ ਦੇ ਗੁਰ ਲੱਭੋ"\n\nਸਾਫ਼ ਬੋਲੋ!'
+                'en': 'Voice Navigation Activated!\n\n"Welcome to KisanSeva voice assistance. You can now use voice commands to navigate."\n\nTry saying:\n• "Show pest diagnosis"\n• "Open marketplace"\n• "Check weather"\n• "Find farming tips"\n\nSpeak clearly for best results!',
+                'hi': 'आवाज़ नेविगेशन सक्रिय!\n\n"किसान सेवा वॉइस असिस्टेंट में आपका स्वागत है। अब आप वॉइस कमांड का उपयोग कर सकते हैं।"\n\nकहकर देखें:\n• "कीट निदान दिखाएं"\n• "बाज़ार खोलें"\n• "मौसम देखें"\n• "खेती के टिप्स खोजें"\n\nस्पष्ट बोलें!',
+                'pa': 'ਆਵਾਜ਼ ਨੈਵੀਗੇਸ਼ਨ ਸਰਗਰਮ!\n\n"ਕਿਸਾਨ ਸੇਵਾ ਵਾਇਸ ਸਹਾਇਕ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ। ਹੁਣ ਤੁਸੀਂ ਆਵਾਜ਼ ਕਮਾਂਡ ਦੀ ਵਰਤੋਂ ਕਰ ਸਕਦੇ ਹੋ।"\n\nਕਹਿ ਕੇ ਦੇਖੋ:\n• "ਕੀਟ ਨਿਦਾਨ ਵਿਖਾਓ"\n• "ਬਾਜ਼ਾਰ ਖੋਲ੍ਹੋ"\n• "ਮੌਸਮ ਵੇਖੋ"\n• "ਖੇਤੀ ਦੇ ਗੁਰ ਲੱਭੋ"\n\nਸਾਫ਼ ਬੋਲੋ!'
             };
 
             alert(messages[lang]);
@@ -822,9 +831,9 @@
             // Simulate voice recognition start
             setTimeout(() => {
                 const followUpMessages = {
-                    'en': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-vocal-icon lucide-mic-vocal"><path d="m11 7.601-5.994 8.19a1 1 0 0 0 .1 1.298l.817.818a1 1 0 0 0 1.314.087L15.09 12"/><path d="M16.5 21.174C15.5 20.5 14.372 20 13 20c-2.058 0-3.928 2.356-6 2-2.072-.356-2.775-3.369-1.5-4.5"/><circle cx="16" cy="7" r="5"/></svg> Listening... (Demo Mode)\n\nIn the full version, you would now be able to speak your commands and KisanSeva would respond accordingly.',
-                    'hi': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-vocal-icon lucide-mic-vocal"><path d="m11 7.601-5.994 8.19a1 1 0 0 0 .1 1.298l.817.818a1 1 0 0 0 1.314.087L15.09 12"/><path d="M16.5 21.174C15.5 20.5 14.372 20 13 20c-2.058 0-3.928 2.356-6 2-2.072-.356-2.775-3.369-1.5-4.5"/><circle cx="16" cy="7" r="5"/></svg> सुन रहा है... (डेमो मोड)\n\nपूर्ण संस्करण में, आप अब अपने कमांड बोल सकेंगे और किसान सेवा तदनुसार प्रतिक्रिया देगा।',
-                    'pa': '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-vocal-icon lucide-mic-vocal"><path d="m11 7.601-5.994 8.19a1 1 0 0 0 .1 1.298l.817.818a1 1 0 0 0 1.314.087L15.09 12"/><path d="M16.5 21.174C15.5 20.5 14.372 20 13 20c-2.058 0-3.928 2.356-6 2-2.072-.356-2.775-3.369-1.5-4.5"/><circle cx="16" cy="7" r="5"/></svg> ਸੁਣ ਰਿਹਾ ਹੈ... (ਡੈਮੋ ਮੋਡ)\n\nਪੂਰੇ ਸੰਸਕਰਣ ਵਿੱਚ, ਤੁਸੀਂ ਹੁਣ ਆਪਣੇ ਕਮਾਂਡ ਬੋਲ ਸਕੋਗੇ ਅਤੇ ਕਿਸਾਨ ਸੇਵਾ ਉਸ ਅਨੁਸਾਰ ਜਵਾਬ ਦੇਵੇਗੀ।'
+                    'en': 'Listening... (Demo Mode)\n\nIn the full version, you would now be able to speak your commands and KisanSeva would respond accordingly.',
+                    'hi': 'सुन रहा है... (डेमो मोड)\n\nपूर्ण संस्करण में, आप अब अपने कमांड बोल सकेंगे और किसान सेवा तदनुसार प्रतिक्रिया देगा।',
+                    'pa': 'ਸੁਣ ਰਿਹਾ ਹੈ... (ਡੈਮੋ ਮੋਡ)\n\nਪੂਰੇ ਸੰਸਕਰਣ ਵਿੱਚ, ਤੁਸੀਂ ਹੁਣ ਆਪਣੇ ਕਮਾਂਡ ਬੋਲ ਸਕੋਗੇ ਅਤੇ ਕਿਸਾਨ ਸੇਵਾ ਉਸ ਅਨੁਸਾਰ ਜਵਾਬ ਦੇਵੇਗੀ।'
                 };
                 alert(followUpMessages[lang]);
             }, 1500);

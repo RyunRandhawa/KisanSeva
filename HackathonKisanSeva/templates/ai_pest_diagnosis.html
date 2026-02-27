@@ -346,6 +346,31 @@
             transform: translateY(-2px);
         }
 
+        #riskLevel {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .risk-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .risk-moderate {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -401,7 +426,7 @@
                     </button>
                 </div>
 
-                
+
                 <div class="sample-section">
                     <h4>Or try with sample crop images:</h4>
                     <div class="sample-images">
@@ -444,6 +469,10 @@
                         <div class="result-info">
                             <h2 id="pestName">Detected Pest</h2>
                             <span class="confidence-badge" id="confidence">95% Confidence</span>
+                            <div id="riskBox" style="margin-top: 1rem;">
+                                <div id="riskLevel"></div>
+                                <div id="severityScore" style="font-size: 1rem; color: var(--text-dark);"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -452,12 +481,12 @@
                     </div>
 
                     <div class="treatment-section">
-                        <h3>💊 Recommended Treatment Plan</h3>
+                        <h3><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6B3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M12 2v20M2 12h20"/></svg>Recommended Treatment Plan</h3>
                         <ul class="treatment-steps" id="treatmentSteps"></ul>
                     </div>
 
                     <div class="prevention-box">
-                        <h4>💡 Prevention Tips</h4>
+                        <h4><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6B3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c1 1 1 2 1 3h6c0-1 0-2 1-3a7 7 0 0 0-4-12z"/></svg>Prevention Tips</h4>
                         <p id="preventionTip"></p>
                     </div>
 
@@ -525,6 +554,25 @@
         const uploadBtn = document.querySelector('.upload-btn'); // Get the button
 
         let model; // This will hold our AI model
+
+        // NEW FUNCTION: Calculate risk score
+        function calculateRisk(confidencePercent) {
+            const riskScore = (confidencePercent * 0.6) + (70 * 0.2) + (60 * 0.2);
+
+            let level;
+            if (riskScore < 40) {
+                level = 'Low';
+            } else if (riskScore < 70) {
+                level = 'Moderate';
+            } else {
+                level = 'High';
+            }
+
+            return {
+                score: Math.round(riskScore),
+                level: level
+            };
+        }
 
         // 1. Load the AI model and UPDATE THE BUTTON
         async function loadModel() {
@@ -608,10 +656,14 @@
 
                 // --- FIXED CONFIDENCE ---
                 const confidence = Math.floor(predictions[0].probability * 100) + '%';
+                const confidencePercent = Math.floor(predictions[0].probability * 100);
+
+                // Calculate risk
+                const riskData = calculateRisk(confidencePercent);
 
                 // 5. Show results
                 setTimeout(() => {
-                    showResults(imgSrc, pestType, confidence);
+                    showResults(imgSrc, pestType, confidence, riskData);
                 }, 1500);
             }
         }
@@ -652,7 +704,9 @@
                 setTimeout(() => {
                     // --- FIXED CONFIDENCE ---
                     const confidence = '94%'; // Constant for samples
-                    showResults(imgSrc, pestType, confidence);
+                    const confidencePercent = 94;
+                    const riskData = calculateRisk(confidencePercent);
+                    showResults(imgSrc, pestType, confidence, riskData);
                 }, 3000);
             }
         }
@@ -664,7 +718,7 @@
             document.getElementById('resultContainer').style.display = 'none';
         }
 
-        function showResults(imgSrc, pestType, confidence) {
+        function showResults(imgSrc, pestType, confidence, riskData) {
             const pest = pestDatabase[pestType];
 
             if (!pest) {
@@ -681,6 +735,15 @@
             document.getElementById('pestName').textContent = pest.name;
             document.getElementById('confidence').textContent = confidence;
             document.getElementById('pestDescription').textContent = pest.description;
+
+            // Update risk level display
+            if (riskData) {
+                const riskLevelDiv = document.getElementById('riskLevel');
+                riskLevelDiv.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6B3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1"/></svg>Risk Level: ${riskData.level}`;
+                riskLevelDiv.className = "";
+                riskLevelDiv.classList.add("risk-" + riskData.level.toLowerCase());
+                document.getElementById('severityScore').textContent = `Severity Score: ${riskData.score}%`;
+            }
 
             const stepsHtml = pest.treatments.map(step => `<li>${step}</li>`).join('');
             document.getElementById('treatmentSteps').innerHTML = stepsHtml;

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability & Impact Dashboard - KisanSeva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-primary: #2F6B3D;
+            --green-light: #4A8F5A;
+            --green-dark: #1E4A2A;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --white: #ffffff;
+            --bg-light: #F8F9FA;
+            --border-light: #e0e0e0;
+            --golden: #F4A416;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--green-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+            font-weight: 900;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .input-card, .results-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            color: var(--green-primary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--green-primary);
+            box-shadow: 0 0 0 3px rgba(47,107,61,0.1);
+        }
+
+        .input-hint {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--green-primary), var(--green-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(47,107,61,0.3);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, var(--green-primary), var(--green-light));
+            color: white;
+        }
+
+        .results-card .card-title {
+            color: white;
+        }
+
+        .results-card .card-title svg {
+            stroke: white;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-subtext {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .savings-highlight {
+            background: var(--golden);
+            color: var(--text-dark);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .savings-highlight h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .savings-highlight .big-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+        }
+
+        .section-divider {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sustainability-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .sustainability-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .sustainability-card {
+            background: rgba(47,107,61,0.05);
+            border: 2px solid var(--green-light);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .sustainability-card .result-label {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 1;
+        }
+
+        .sustainability-card .result-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--green-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sustainability-card .result-subtext {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            opacity: 1;
+        }
+
+        .sustainability-card.score-card {
+            background: rgba(244,164,22,0.1);
+            border-color: var(--golden);
+        }
+
+        .sustainability-card.score-card .result-value {
+            font-size: 3rem;
+            color: var(--golden);
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .comparison-card {
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-light);
+            transition: all 0.3s;
+        }
+
+        .comparison-card.traditional {
+            background: rgba(255,0,0,0.05);
+            border-color: rgba(255,0,0,0.2);
+        }
+
+        .comparison-card.solar {
+            background: rgba(47,107,61,0.05);
+            border-color: var(--green-light);
+        }
+
+        .comparison-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-list li {
+            padding: 0.8rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comparison-list li:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-list li svg {
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--green-primary);
+        }
+
+        .tip-card h4 {
+            color: var(--green-primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tip-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 968px) {
+            .calculator-grid, .comparison-grid, .tips-grid, .sustainability-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+
+        <div class="header">
+            <h1>Sustainability & Impact Dashboard</h1>
+            <p>Calculate your financial savings and environmental impact from switching to eco-friendly solar-powered pest control</p>
+        </div>
+
+        <div class="calculator-grid">
+            <!-- Input Section -->
+            <div class="input-card">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 2v4"/><path d="M12 2v4"/><path d="M16 2v4"/><rect width="16" height="18" x="4" y="4" rx="2"/><path d="M8 10h6"/><path d="M8 14h8"/><path d="M8 18h5"/>
+                    </svg>
+                    Enter Your Farm Details
+                </h2>
+
+                <div class="input-group">
+                    <label for="farmSize">Farm Size (in acres)</label>
+                    <input type="number" id="farmSize" min="0.5" max="100" step="0.5" value="2" oninput="calculateROI()">
+                    <p class="input-hint">Average small farm: 1-5 acres</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="cropType">Crop Type</label>
+                    <select id="cropType" onchange="calculateROI()">
+                        <option value="wheat">Wheat (गेहूं)</option>
+                        <option value="rice">Rice (धान)</option>
+                        <option value="cotton">Cotton (कपास)</option>
+                        <option value="vegetables">Vegetables (सब्जियां)</option>
+                        <option value="sugarcane">Sugarcane (गन्ना)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="pesticideCost">Current Annual Pesticide Cost (₹)</label>
+                    <input type="number" id="pesticideCost" min="1000" max="100000" step="500" value="15000" oninput="calculateROI()">
+                    <p class="input-hint">Average: ₹10,000 - ₹20,000 per acre / year</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="applications">Pesticide Applications per Year</label>
+                    <input type="number" id="applications" min="1" max="12" value="4" oninput="calculateROI()">
+                    <p class="input-hint">Typical: 2-4 applications annually</p>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateROI()">
+                    Calculate Impact
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">
+                        <path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-card">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 16v5"/><path d="M16 14v7"/><path d="M20 10v11"/><path d="m22 3-8.646 8.646a.5.5 0 0 1-.708 0L9.354 8.354a.5.5 0 0 0-.707 0L2 15"/><path d="M4 18v3"/><path d="M8 14v7"/>
+                    </svg>
+                    Financial Impact
+                </h2>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Solar Trap Investment
+                    </div>
+                    <div class="result-value" id="investment">₹6,000</div>
+                    <div class="result-subtext">One-time cost for 2 traps</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                        Annual Savings
+                    </div>
+                    <div class="result-value" id="annualSavings">₹12,800</div>
+                    <div class="result-subtext">Reduction in pesticide costs</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Payback Period
+                    </div>
+                    <div class="result-value" id="paybackPeriod">5.6 months</div>
+                    <div class="result-subtext">Time to recover investment</div>
+                </div>
+
+                <div class="savings-highlight">
+                    <h3>5-Year Total Savings</h3>
+                    <div class="big-number" id="totalSavings">₹64,000</div>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;">Plus: Healthier crops & soil!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sustainability Impact Metrics Section -->
+        <div class="sustainability-section">
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+                Sustainability Impact Metrics
+            </h2>
+
+            <div class="sustainability-grid">
+                <div class="sustainability-card">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                        </svg>
+                        Carbon Emissions Reduced
+                    </div>
+                    <div class="result-value" id="carbonSaved">0 kg/year</div>
+                    <div class="result-subtext">Equivalent to planting trees</div>
+                </div>
+
+                <div class="sustainability-card">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                        Water Saved
+                    </div>
+                    <div class="result-value" id="waterSaved">0 liters/year</div>
+                    <div class="result-subtext">Enough for household use</div>
+                </div>
+
+                <div class="sustainability-card">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/>
+                        </svg>
+                        Chemical Usage Reduction
+                    </div>
+                    <div class="result-value" id="chemicalReduction">0%</div>
+                    <div class="result-subtext">Less toxic chemicals in soil</div>
+                </div>
+
+                <div class="sustainability-card score-card">
+                    <div class="result-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                        </svg>
+                        Sustainability Score
+                    </div>
+                    <div class="result-value" id="sustainabilityScore">0/100</div>
+                    <div class="result-subtext">Your eco-friendly impact rating</div>
+                </div>
+            </div>
+        </div>
+</div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                </svg>
+                Traditional vs Solar Pest Control
+            </h2>
+            <div class="comparison-grid">
+                <div class="comparison-card traditional">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"/><path d="M16 18h-5"/><path d="M18 5a1 1 0 0 0-1 1v5.573"/><path d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"/><path d="M4 11V4"/><path d="M7 15h.01"/><path d="M8 10.1V4"/><circle cx="18" cy="18" r="2"/><circle cx="7" cy="15" r="5"/>
+                        </svg>
+                        Traditional Pesticides
+                    </h4>
+                    <ul class="comparison-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Recurring monthly/quarterly costs
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Harmful chemicals affect soil health
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Kills beneficial insects too
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Health risks for farmers
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Environmental pollution
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                            Pest resistance develops over time
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card solar">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                        </svg>
+                        Solar-Powered Traps
+                    </h4>
+                    <ul class="comparison-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            One-time investment, 5+ years lifespan
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            100% chemical-free, safe for soil
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            Targets harmful pests only
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            Zero health risks
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            Eco-friendly, zero emissions
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            No electricity cost, solar-powered
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+""
+
+        <!-- Additional Benefits -->
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Cost Efficiency
+                </h4>
+                <p>Save 70-85% on pest control costs annually. Initial investment pays for itself in less than 6 months.</p>
+            </div>
+            <div class="tip-card">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>
+                    </svg>
+                    Better Yields
+                </h4>
+                <p>Chemical-free farming improves soil quality, leading to 10-15% higher yields over time.</p>
+            </div>
+            <div class="tip-card">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                    Premium Pricing
+                </h4>
+                <p>Organic produce commands 20-30% higher market prices, increasing your profit margins.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Trap pricing based on farm size
+        const trapPricing = {
+            small: 3000,    // 1 trap for 0.5-1 acre
+            medium: 3200,   // per trap for bulk
+            large: 3100     // per trap for bulk
+        };
+
+        function calculateROI() {
+            const farmSize = parseFloat(document.getElementById('farmSize').value) || 2;
+            const pesticideCost = parseFloat(document.getElementById('pesticideCost').value) || 15000;
+            const applications = parseInt(document.getElementById('applications').value) || 4;
+
+            // Calculate number of traps needed (1 trap per acre)
+            const trapsNeeded = Math.ceil(farmSize);
+
+            // Calculate trap cost
+            let trapCost = trapPricing.small;
+            if (trapsNeeded >= 5) trapCost = trapPricing.large;
+            else if (trapsNeeded >= 3) trapCost = trapPricing.medium;
+
+            const totalInvestment = trapsNeeded * trapCost;
+
+            // Solar traps reduce pesticide need by 75-85%
+            const reductionRate = 0.60;
+            const annualSavings = pesticideCost * reductionRate;
+
+            // Payback period in months
+            const paybackMonths = (totalInvestment / annualSavings) * 12;
+
+            // 5-year savings
+            const fiveYearSavings = (annualSavings * 5) - totalInvestment;
+
+            // ===== ENVIRONMENTAL IMPACT CALCULATIONS =====
+            // Assumptions:
+            // - Each pesticide spray per acre emits 20 kg CO2
+            // - Each spray per acre uses 250 liters of water
+            // - Solar traps reduce sprays by 60%
+
+            // Traditional spray applications
+            const traditionalSprays = applications * farmSize;
+            
+            // Optimized spray applications (20% of traditional)
+            const optimizedSprays = traditionalSprays * (1 - reductionRate);
+            
+            // Carbon emissions saved (kg/year)
+            const carbonSaved = (traditionalSprays - optimizedSprays) * 20;
+            
+            // Water saved (liters/year)
+            const waterSaved = (traditionalSprays - optimizedSprays) * 250;
+            
+            // Chemical reduction percentage
+            const chemicalReduction = reductionRate * 100;
+            
+            // Sustainability score calculation (0-100)
+            // Formula: (chemical_reduction * 0.4) + (min(carbon_saved/200, 1) * 30) + (min(water_saved/2000, 1) * 30)
+            const carbonScore = Math.min(carbonSaved / 200, 1) * 30;
+            const waterScore = Math.min(waterSaved / 2000, 1) * 30;
+            const chemicalScore = chemicalReduction * 0.4;
+            let sustainabilityScore = chemicalScore + carbonScore + waterScore;
+            
+            // Cap at 100
+            sustainabilityScore = Math.min(sustainabilityScore, 100);
+
+            // Update Financial ROI UI
+            document.getElementById('investment').innerHTML = `₹${totalInvestment.toLocaleString('en-IN')}`;
+            document.getElementById('annualSavings').innerHTML = `₹${Math.round(annualSavings).toLocaleString('en-IN')}`;
+            document.getElementById('paybackPeriod').innerHTML = `${paybackMonths.toFixed(1)} months`;
+            document.getElementById('totalSavings').innerHTML = `₹${Math.round(fiveYearSavings).toLocaleString('en-IN')}`;
+
+            // Update Environmental Impact UI
+            document.getElementById('carbonSaved').innerHTML = `${Math.round(carbonSaved)} kg/year`;
+            document.getElementById('waterSaved').innerHTML = `${Math.round(waterSaved).toLocaleString('en-IN')} liters/year`;
+            document.getElementById('chemicalReduction').innerHTML = `${Math.round(chemicalReduction)}%`;
+            document.getElementById('sustainabilityScore').innerHTML = `${Math.round(sustainabilityScore)}/100`;
+        }
+
+        // Calculate on page load
+        calculateROI();
+    </script>
+</body>
+</html>

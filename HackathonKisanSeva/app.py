@@ -33,7 +33,7 @@ class User(db.Model):
 
 class PestAnalysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     image_path = db.Column(db.String(200))
     pest_detected = db.Column(db.String(100))
     confidence = db.Column(db.Integer)
@@ -51,7 +51,7 @@ class CropCalendar(db.Model):
 
 class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     title = db.Column(db.String(200))
     content = db.Column(db.Text)
     category = db.Column(db.String(50))
@@ -62,13 +62,13 @@ class ForumPost(db.Model):
 class ForumReply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     content = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class MarketplaceListing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     title = db.Column(db.String(200))
     category = db.Column(db.String(50))
     price = db.Column(db.Float)
@@ -282,7 +282,8 @@ def knowledge_exchange():
         content = request.form['content']
         category = request.form.get('category', 'general')
 
-        post = ForumPost(user_id=session.get('user_id', 1),
+        post = ForumPost(
+            user_id=session.get('user_id'),  # no fallback
                          title=title, content=content, category=category)
         db.session.add(post)
         db.session.commit()

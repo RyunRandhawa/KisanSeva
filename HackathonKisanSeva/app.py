@@ -10,10 +10,19 @@ import os
 import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kisanseva.db'
-app.config['SECRET_KEY'] = 'kisanseva-secret-key-2025'
+
+database_url = os.environ.get("DATABASE_URL", "sqlite:///kisanseva.db")
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 db = SQLAlchemy(app)
 
 # ------- DATABASE MODELS -------
@@ -343,32 +352,6 @@ def language_support():
 def product_details():
     return render_template('product_details.html', username=session.get('user'))
 
-if __name__ == '__main__':
+if __name__ != "__main__":
     with app.app_context():
         db.create_all()
-        if CropCalendar.query.count() == 0:
-            for c in CROP_CALENDAR_DATA:
-                db.session.add(CropCalendar(
-                    crop_name=c['crop'], season=c['season'],
-                    planting_month=c['plant'], harvest_month=c['harvest'],
-                    region=c['region']
-                ))
-
-        if MarketplaceListing.query.count() == 0:
-            sample = [
-                MarketplaceListing(
-                    user_id=1, title='Solar Insect Trap', category='trap',
-                    price=3200, description='10W solar panel, UV LED, 12V battery',
-                    stock=25, location='Punjab'
-                ),
-                MarketplaceListing(
-                    user_id=1, title='Organic Fertilizer (50kg)', category='tools',
-                    price=850, description='Pure organic compost', stock=100, location='Haryana'
-                )
-            ]
-            db.session.add_all(sample)
-            db.session.commit()
-            print("✅ Database seeded with sample data!")
-
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    app.run(debug=True, host='127.0.0.1', port=5000)

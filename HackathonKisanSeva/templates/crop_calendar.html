@@ -206,6 +206,112 @@
             margin-top: 1rem;
         }
 
+        .financial-section {
+            background: linear-gradient(135deg, rgba(47,107,61,0.05), rgba(74,143,90,0.05));
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 2px solid rgba(47,107,61,0.1);
+        }
+
+        .financial-section h4 {
+            color: var(--green-primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .financial-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .financial-row:last-child {
+            border-bottom: none;
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid rgba(47,107,61,0.2);
+        }
+
+        .financial-label {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .financial-value {
+            color: var(--green-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .roi-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .roi-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .roi-moderate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .roi-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .empty-state-card {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .empty-state-card h3 {
+            color: var(--text-dark);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-card p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-btn {
+            background: var(--green-primary);
+            color: white;
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .empty-state-btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+        }
+
         .tips-section {
             background: white;
             border-radius: 15px;
@@ -282,11 +388,20 @@
                     <option value="All">All Regions</option>
                     <option value="Punjab">Punjab</option>
                     <option value="Haryana">Haryana</option>
-                    <option value="UP">Uttar Pradesh</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
                     <option value="Rajasthan">Rajasthan</option>
                     <option value="West Bengal">West Bengal</option>
                     <option value="Gujarat">Gujarat</option>
                     <option value="Maharashtra">Maharashtra</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Assam">Assam</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -299,6 +414,10 @@
                     <option value="Year-round">Year-round</option>
                 </select>
             </div>
+            <div class="filter-group">
+                <label for="landSize">Enter Your Land Size (Acres)</label>
+                <input type="number" id="landSize" class="filter-select" value="1" min="0.1" step="0.1" onchange="filterCrops()" style="text-align: center; font-weight: 600;">
+            </div>
         </div>
 
         <div class="crops-grid" id="cropsGrid">
@@ -306,7 +425,7 @@
         </div>
 
         <div class="tips-section">
-            <h2>💡 Traditional Farming Tips</h2>
+            <h2><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff700" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Traditional Farming Tips</h2>
             <div class="tips-grid">
                 <div class="tip-card">
                     <h4>Moon Phase Planting</h4>
@@ -334,9 +453,222 @@
                 </div>
             </div>
         </div>
+        <div style="text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid #e0e0e0;">
+            <p style="font-size: 0.95rem; color: #808080; margin: 0;">
+                Figures based on latest government MSP and state yield averages. Market prices are estimated and may vary.
+            </p>
+        </div>
     </div>
 
     <script>
+        const MSP_DATA = {
+            'Wheat': 2125,
+            'Rice': 2183,
+            'Maize': 1962,
+            'Mustard': 5450,
+            'Chickpea': 5335,
+            'Barley': 1735,
+            'Cotton': 6620,
+            'Bajra': 2350,
+            'Jowar': 3180,
+            'Groundnut': 6377,
+            'Soybean': 4600
+        };
+
+        const STATE_PROCUREMENT_FACTOR = {
+            'Punjab': 1.08,
+            'Haryana': 1.06,
+            'Uttar Pradesh': 1.02,
+            'Bihar': 0.95,
+            'Rajasthan': 0.97,
+            'West Bengal': 1.00,
+            'Maharashtra': 0.98,
+            'Gujarat': 1.03,
+            'Karnataka': 1.00,
+            'Tamil Nadu': 1.01,
+            'Andhra Pradesh': 1.02,
+            'Telangana': 1.03,
+            'Kerala': 1.00,
+            'Odisha': 0.96,
+            'Assam': 0.97,
+            'Madhya Pradesh': 1.04
+        };
+
+        const REGION_YIELD_FACTORS = {
+            'Wheat': {
+                'Punjab': 1.15,
+                'Haryana': 1.12,
+                'Uttar Pradesh': 1.08,
+                'Rajasthan': 0.90,
+                'Madhya Pradesh': 1.05,
+                'Bihar': 1.00
+            },
+            'Rice': {
+                'Punjab': 1.10,
+                'West Bengal': 1.15,
+                'Uttar Pradesh': 1.05,
+                'Tamil Nadu': 1.08,
+                'Andhra Pradesh': 1.12,
+                'Assam': 1.15,
+                'Odisha': 1.10,
+                'Bihar': 1.05,
+                'Telangana': 1.08,
+                'Kerala': 1.06,
+                'Karnataka': 1.05,
+                'Rajasthan': 0.85
+            },
+            'Cotton': {
+                'Gujarat': 1.18,
+                'Maharashtra': 1.12,
+                'Telangana': 1.15,
+                'Punjab': 1.05,
+                'Haryana': 1.03,
+                'Andhra Pradesh': 1.08,
+                'Karnataka': 1.06
+            },
+            'Sugarcane': {
+                'Uttar Pradesh': 1.20,
+                'Maharashtra': 1.15,
+                'Punjab': 1.05,
+                'Karnataka': 1.10,
+                'Tamil Nadu': 1.08,
+                'Andhra Pradesh': 1.06,
+                'Bihar': 1.02,
+                'Assam': 1.00
+            },
+            'Mustard': {
+                'Rajasthan': 1.15,
+                'Haryana': 1.10,
+                'Uttar Pradesh': 1.08,
+                'Punjab': 1.05,
+                'Madhya Pradesh': 1.03,
+                'Bihar': 1.02,
+                'Assam': 1.00
+            },
+            'Potato': {
+                'Uttar Pradesh': 1.12,
+                'West Bengal': 1.15,
+                'Punjab': 1.08,
+                'Bihar': 1.10,
+                'Gujarat': 1.03
+            },
+            'Maize': {
+                'Karnataka': 1.12,
+                'Andhra Pradesh': 1.10,
+                'Rajasthan': 1.05,
+                'Bihar': 1.08,
+                'Uttar Pradesh': 1.06,
+                'Telangana': 1.09,
+                'Odisha': 1.05
+            },
+            'Tomato': {
+                'Karnataka': 1.15,
+                'Andhra Pradesh': 1.12,
+                'Maharashtra': 1.10,
+                'Tamil Nadu': 1.08
+            },
+            'Onion': {
+                'Maharashtra': 1.18,
+                'Gujarat': 1.12,
+                'Karnataka': 1.08,
+                'Madhya Pradesh': 1.05
+            },
+            'Chickpea': {
+                'Madhya Pradesh': 1.15,
+                'Rajasthan': 1.12,
+                'Maharashtra': 1.08,
+                'Uttar Pradesh': 1.05
+            },
+            'Groundnut': {
+                'Gujarat': 1.18,
+                'Andhra Pradesh': 1.12,
+                'Tamil Nadu': 1.10,
+                'Karnataka': 1.08,
+                'Rajasthan': 1.05,
+                'Telangana': 1.10,
+                'Odisha': 1.05
+            },
+            'Soybean': {
+                'Madhya Pradesh': 1.15,
+                'Maharashtra': 1.12,
+                'Rajasthan': 1.08
+            },
+            'Turmeric': {
+                'Telangana': 1.18,
+                'Andhra Pradesh': 1.15,
+                'Tamil Nadu': 1.12,
+                'Maharashtra': 1.08,
+                'Odisha': 1.10,
+                'Kerala': 1.08
+            },
+            'Banana': {
+                'Tamil Nadu': 1.15,
+                'Maharashtra': 1.12,
+                'Gujarat': 1.10,
+                'Andhra Pradesh': 1.08,
+                'Karnataka': 1.08,
+                'Kerala': 1.12,
+                'Bihar': 1.05
+            },
+            'Coconut': {
+                'Kerala': 1.25,
+                'Tamil Nadu': 1.15,
+                'Karnataka': 1.10,
+                'Andhra Pradesh': 1.08,
+                'Odisha': 1.05
+            },
+            'Tea': {
+                'Assam': 1.20,
+                'West Bengal': 1.15,
+                'Kerala': 1.10,
+                'Tamil Nadu': 1.08
+            },
+            'Jute': {
+                'West Bengal': 1.20,
+                'Assam': 1.15,
+                'Bihar': 1.10,
+                'Odisha': 1.08
+            },
+            'Red Gram': {
+                'Maharashtra': 1.15,
+                'Karnataka': 1.12,
+                'Telangana': 1.18,
+                'Madhya Pradesh': 1.10,
+                'Andhra Pradesh': 1.10
+            },
+            'Black Pepper': {
+                'Kerala': 1.25,
+                'Karnataka': 1.15,
+                'Tamil Nadu': 1.10
+            },
+            'Rubber': {
+                'Kerala': 1.25,
+                'Tamil Nadu': 1.10,
+                'Karnataka': 1.05
+            },
+            'Litchi': {
+                'Bihar': 1.20,
+                'Uttar Pradesh': 1.10,
+                'West Bengal': 1.08
+            },
+            'Watermelon': {
+                'Haryana': 1.15,
+                'Uttar Pradesh': 1.10,
+                'Rajasthan': 1.05,
+                'Punjab': 1.08
+            },
+            'Muskmelon': {
+                'Haryana': 1.18,
+                'Rajasthan': 1.15,
+                'Uttar Pradesh': 1.10
+            },
+            'Cucumber': {
+                'Uttar Pradesh': 1.12,
+                'Punjab': 1.10,
+                'Bihar': 1.08
+            }
+        };
+
         const cropData = [
             {
                 name: 'Wheat (गेहूं)',
@@ -344,8 +676,11 @@
                 season: 'Rabi',
                 planting: 'October - November',
                 harvest: 'March - April',
-                regions: ['Punjab', 'Haryana', 'UP', 'Rajasthan'],
-                tips: 'Best grown in loamy soil with good drainage. Requires 3-5 irrigations during growth.'
+                regions: ['Punjab', 'Haryana', 'Uttar Pradesh', 'Rajasthan'],
+                tips: 'Best grown in loamy soil with good drainage. Requires 3-5 irrigations during growth.',
+                investmentPerAcre: 25000,
+                avgYieldQuintal: 20,
+                marketPricePerQuintal: 2000
             },
             {
                 name: 'Rice (धान)',
@@ -353,8 +688,11 @@
                 season: 'Kharif',
                 planting: 'June - July',
                 harvest: 'October - November',
-                regions: ['Punjab', 'Haryana', 'West Bengal', 'UP'],
-                tips: 'Requires standing water during early growth. Transplant seedlings at 25-30 days.'
+                regions: ['Punjab', 'Haryana', 'West Bengal', 'Uttar Pradesh'],
+                tips: 'Requires standing water during early growth. Transplant seedlings at 25-30 days.',
+                investmentPerAcre: 30000,
+                avgYieldQuintal: 25,
+                marketPricePerQuintal: 1900
             },
             {
                 name: 'Cotton (कपास)',
@@ -363,7 +701,10 @@
                 planting: 'April - May',
                 harvest: 'October - December',
                 regions: ['Gujarat', 'Maharashtra', 'Punjab', 'Haryana'],
-                tips: 'Deep tilling needed. Protect from bollworm using pheromone traps.'
+                tips: 'Deep tilling needed. Protect from bollworm using pheromone traps.',
+                investmentPerAcre: 35000,
+                avgYieldQuintal: 12,
+                marketPricePerQuintal: 5500
             },
             {
                 name: 'Sugarcane (गन्ना)',
@@ -371,17 +712,23 @@
                 season: 'Year-round',
                 planting: 'February - March',
                 harvest: 'December - March',
-                regions: ['UP', 'Maharashtra', 'Punjab'],
-                tips: 'Plant healthy setts with 3 buds. Requires heavy irrigation and fertilization.'
+                regions: ['Uttar Pradesh', 'Maharashtra', 'Punjab'],
+                tips: 'Plant healthy setts with 3 buds. Requires heavy irrigation and fertilization.',
+                investmentPerAcre: 45000,
+                avgYieldQuintal: 350,
+                marketPricePerQuintal: 300
             },
             {
                 name: 'Mustard (सरसों)',
-                icon: '🌼',
+                icon: '🏵️',
                 season: 'Rabi',
                 planting: 'October - November',
                 harvest: 'February - March',
-                regions: ['Rajasthan', 'Haryana', 'UP', 'Punjab'],
-                tips: 'Drought-resistant crop. Harvest when 75% pods turn brown.'
+                regions: ['Rajasthan', 'Haryana', 'Uttar Pradesh', 'Punjab'],
+                tips: 'Drought-resistant crop. Harvest when 75% pods turn brown.',
+                investmentPerAcre: 18000,
+                avgYieldQuintal: 10,
+                marketPricePerQuintal: 5000
             },
             {
                 name: 'Potato (आलू)',
@@ -389,8 +736,11 @@
                 season: 'Rabi',
                 planting: 'October - November',
                 harvest: 'January - February',
-                regions: ['UP', 'West Bengal', 'Punjab', 'Haryana'],
-                tips: 'Earthing up is crucial. Protect from late blight with proper spacing.'
+                regions: ['Uttar Pradesh', 'West Bengal', 'Punjab', 'Haryana'],
+                tips: 'Earthing up is crucial. Protect from late blight with proper spacing.',
+                investmentPerAcre: 40000,
+                avgYieldQuintal: 200,
+                marketPricePerQuintal: 800
             },
             {
                 name: 'Maize (मक्का)',
@@ -398,8 +748,11 @@
                 season: 'Kharif',
                 planting: 'June - July',
                 harvest: 'September - October',
-                regions: ['Punjab', 'UP', 'Rajasthan', 'Haryana'],
-                tips: 'Requires well-drained soil. Apply first irrigation at knee-high stage.'
+                regions: ['Punjab', 'Uttar Pradesh', 'Rajasthan', 'Haryana'],
+                tips: 'Requires well-drained soil. Apply first irrigation at knee-high stage.',
+                investmentPerAcre: 22000,
+                avgYieldQuintal: 25,
+                marketPricePerQuintal: 1800
             },
             {
                 name: 'Tomato (टमाटर)',
@@ -408,7 +761,10 @@
                 planting: 'Various seasons',
                 harvest: '60-90 days after transplant',
                 regions: ['All'],
-                tips: 'Transplant seedlings at 25-30 days. Support plants with stakes.'
+                tips: 'Transplant seedlings at 25-30 days. Support plants with stakes.',
+                investmentPerAcre: 50000,
+                avgYieldQuintal: 250,
+                marketPricePerQuintal: 1200
             },
             {
                 name: 'Onion (प्याज)',
@@ -416,8 +772,11 @@
                 season: 'Rabi',
                 planting: 'November - December',
                 harvest: 'March - April',
-                regions: ['Maharashtra', 'Gujarat', 'UP', 'Punjab'],
-                tips: 'Stop watering 15 days before harvest. Cure bulbs in shade for storage.'
+                regions: ['Maharashtra', 'Gujarat', 'Uttar Pradesh', 'Punjab'],
+                tips: 'Stop watering 15 days before harvest. Cure bulbs in shade for storage.',
+                investmentPerAcre: 35000,
+                avgYieldQuintal: 150,
+                marketPricePerQuintal: 1500
             },
             {
                 name: 'Chickpea (चना)',
@@ -425,8 +784,11 @@
                 season: 'Rabi',
                 planting: 'October - November',
                 harvest: 'March - April',
-                regions: ['Rajasthan', 'UP', 'Punjab', 'Haryana'],
-                tips: 'Nitrogen-fixing crop, improves soil. Requires minimal irrigation.'
+                regions: ['Rajasthan', 'Uttar Pradesh', 'Punjab', 'Haryana'],
+                tips: 'Nitrogen-fixing crop, improves soil. Requires minimal irrigation.',
+                investmentPerAcre: 20000,
+                avgYieldQuintal: 12,
+                marketPricePerQuintal: 5000
             },
             {
                 name: 'Cabbage (पत्तागोभी)',
@@ -434,8 +796,11 @@
                 season: 'Rabi',
                 planting: 'October - November',
                 harvest: 'January - March',
-                regions: ['Punjab', 'Haryana', 'West Bengal', 'UP'],
-                tips: 'Transplant at 4-5 leaf stage. Protect from caterpillars using neem spray.'
+                regions: ['Punjab', 'Haryana', 'West Bengal', 'Uttar Pradesh'],
+                tips: 'Transplant at 4-5 leaf stage. Protect from caterpillars using neem spray.',
+                investmentPerAcre: 30000,
+                avgYieldQuintal: 200,
+                marketPricePerQuintal: 600
             },
             {
                 name: 'Soybean (सोयाबीन)',
@@ -443,16 +808,410 @@
                 season: 'Kharif',
                 planting: 'June - July',
                 harvest: 'September - October',
-                regions: ['Maharashtra', 'Rajasthan', 'UP'],
-                tips: 'Inoculate seeds with Rhizobium. Well-drained soil essential.'
+                regions: ['Maharashtra', 'Rajasthan', 'Uttar Pradesh'],
+                tips: 'Inoculate seeds with Rhizobium. Well-drained soil essential.',
+                investmentPerAcre: 24000,
+                avgYieldQuintal: 15,
+                marketPricePerQuintal: 4000
+            },
+            {
+                name: 'Groundnut (मूंगफली)',
+                icon: '🥜',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'October - November',
+                regions: ['Gujarat', 'Andhra Pradesh', 'Tamil Nadu', 'Karnataka', 'Rajasthan'],
+                tips: 'Requires well-drained sandy loam soil. Gypsum application improves pod quality.',
+                investmentPerAcre: 28000,
+                avgYieldQuintal: 18,
+                marketPricePerQuintal: 5500
+            },
+            {
+                name: 'Barley (जौ)',
+                icon: '🌿',
+                season: 'Rabi',
+                planting: 'October - November',
+                harvest: 'March - April',
+                regions: ['Rajasthan', 'Uttar Pradesh', 'Haryana', 'Punjab'],
+                tips: 'Tolerates saline and alkaline soils. Requires less water than wheat.',
+                investmentPerAcre: 20000,
+                avgYieldQuintal: 18,
+                marketPricePerQuintal: 1800
+            },
+            {
+                name: 'Turmeric (हल्दी)',
+                icon: '🫚',
+                season: 'Kharif',
+                planting: 'May - June',
+                harvest: 'January - March',
+                regions: ['Telangana', 'Andhra Pradesh', 'Tamil Nadu', 'Maharashtra'],
+                tips: 'Requires shade and high rainfall. Harvest when leaves turn yellow.',
+                investmentPerAcre: 60000,
+                avgYieldQuintal: 50,
+                marketPricePerQuintal: 8000
+            },
+            {
+                name: 'Banana (केला)',
+                icon: '🍌',
+                season: 'Year-round',
+                planting: 'Throughout year',
+                harvest: '12-15 months after planting',
+                regions: ['Tamil Nadu', 'Maharashtra', 'Gujarat', 'Andhra Pradesh', 'Karnataka'],
+                tips: 'Requires consistent moisture. Mulching helps retain soil moisture.',
+                investmentPerAcre: 80000,
+                avgYieldQuintal: 400,
+                marketPricePerQuintal: 1500
+            },
+            {
+                name: 'Jowar (ज्वार)',
+                icon: '🌾',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'October - November',
+                regions: ['Maharashtra', 'Karnataka', 'Rajasthan', 'Madhya Pradesh'],
+                tips: 'Drought-resistant crop. Suitable for rainfed areas.',
+                investmentPerAcre: 15000,
+                avgYieldQuintal: 12,
+                marketPricePerQuintal: 2500
+            },
+            {
+                name: 'Bajra (बाजरा)',
+                icon: '🌿',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'September - October',
+                regions: ['Rajasthan', 'Gujarat', 'Haryana', 'Uttar Pradesh'],
+                tips: 'Highly drought-tolerant. Grows well in sandy soils.',
+                investmentPerAcre: 14000,
+                avgYieldQuintal: 10,
+                marketPricePerQuintal: 2200
+            },
+            {
+                name: 'Green Gram (मूंग)',
+                icon: '🫛',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'September - October',
+                regions: ['Rajasthan', 'Maharashtra', 'Andhra Pradesh', 'Karnataka'],
+                tips: 'Short duration crop. Enriches soil with nitrogen.',
+                investmentPerAcre: 16000,
+                avgYieldQuintal: 6,
+                marketPricePerQuintal: 7000
+            },
+            {
+                name: 'Black Gram (उड़द)',
+                icon: '🫘',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'September - October',
+                regions: ['Madhya Pradesh', 'Uttar Pradesh', 'Andhra Pradesh', 'Tamil Nadu'],
+                tips: 'Grows well in black cotton soil. Requires good drainage.',
+                investmentPerAcre: 17000,
+                avgYieldQuintal: 7,
+                marketPricePerQuintal: 6500
+            },
+            {
+                name: 'Sunflower (सूरजमुखी)',
+                icon: '🌻',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'October - November',
+                regions: ['Karnataka', 'Andhra Pradesh', 'Maharashtra', 'Bihar'],
+                tips: 'Requires well-drained soil. Protect from birds during maturity.',
+                investmentPerAcre: 22000,
+                avgYieldQuintal: 12,
+                marketPricePerQuintal: 5500
+            },
+            {
+                name: 'Coconut (नारियल)',
+                icon: '🥥',
+                season: 'Year-round',
+                planting: 'Throughout year',
+                harvest: 'Year-round (after 5-7 years)',
+                regions: ['Kerala', 'Tamil Nadu', 'Karnataka', 'Andhra Pradesh', 'Odisha'],
+                tips: 'Requires coastal climate with high rainfall. Plant during monsoon season.',
+                investmentPerAcre: 70000,
+                avgYieldQuintal: 80,
+                marketPricePerQuintal: 12000
+            },
+            {
+                name: 'Black Pepper (काली मिर्च)',
+                icon: '⚫',
+                season: 'Year-round',
+                planting: 'May - June',
+                harvest: 'December - February',
+                regions: ['Kerala', 'Karnataka', 'Tamil Nadu'],
+                tips: 'Grows as vine on support trees. Requires shade and high humidity.',
+                investmentPerAcre: 90000,
+                avgYieldQuintal: 8,
+                marketPricePerQuintal: 50000
+            },
+            {
+                name: 'Rubber (रबड़)',
+                icon: '🌳',
+                season: 'Year-round',
+                planting: 'May - June',
+                harvest: 'Tapping after 6-7 years',
+                regions: ['Kerala', 'Tamil Nadu', 'Karnataka'],
+                tips: 'Requires high rainfall and humidity. Tapping done in early morning.',
+                investmentPerAcre: 120000,
+                avgYieldQuintal: 15,
+                marketPricePerQuintal: 15000
+            },
+            {
+                name: 'Tea (चाय)',
+                icon: '🍵',
+                season: 'Year-round',
+                planting: 'May - June',
+                harvest: 'Year-round plucking',
+                regions: ['Assam', 'West Bengal', 'Kerala', 'Tamil Nadu'],
+                tips: 'Requires hilly terrain with good drainage. Regular pruning essential.',
+                investmentPerAcre: 100000,
+                avgYieldQuintal: 20,
+                marketPricePerQuintal: 20000
+            },
+            {
+                name: 'Jute (जूट)',
+                icon: '🌿',
+                season: 'Kharif',
+                planting: 'March - May',
+                harvest: 'July - September',
+                regions: ['West Bengal', 'Assam', 'Bihar', 'Odisha'],
+                tips: 'Requires warm humid climate. Retting process crucial for fiber quality.',
+                investmentPerAcre: 25000,
+                avgYieldQuintal: 25,
+                marketPricePerQuintal: 4500
+            },
+            {
+                name: 'Red Gram (अरहर)',
+                icon: '🫘',
+                season: 'Kharif',
+                planting: 'June - July',
+                harvest: 'December - January',
+                regions: ['Maharashtra', 'Karnataka', 'Telangana', 'Madhya Pradesh', 'Andhra Pradesh'],
+                tips: 'Drought-resistant pulse crop. Improves soil fertility through nitrogen fixation.',
+                investmentPerAcre: 18000,
+                avgYieldQuintal: 8,
+                marketPricePerQuintal: 6500
+            },
+            {
+                name: 'Litchi (लीची)',
+                icon: '🍒',
+                season: 'Year-round',
+                planting: 'July - August',
+                harvest: 'May - June',
+                regions: ['Bihar', 'Uttar Pradesh', 'West Bengal'],
+                tips: 'Requires subtropical climate. Fruiting starts after 5-7 years.',
+                investmentPerAcre: 85000,
+                avgYieldQuintal: 50,
+                marketPricePerQuintal: 8000
+            },
+            {
+                name: 'Watermelon (तरबूज)',
+                icon: '🍉',
+                season: 'Zaid',
+                planting: 'February - March',
+                harvest: 'May - June',
+                regions: ['Haryana', 'Uttar Pradesh', 'Rajasthan', 'Punjab'],
+                tips: 'Requires warm weather and sandy loam soil. Needs regular irrigation.',
+                investmentPerAcre: 30000,
+                avgYieldQuintal: 120,
+                marketPricePerQuintal: 1200
+            },
+            {
+                name: 'Muskmelon (खरबूजा)',
+                icon: '🍈',
+                season: 'Zaid',
+                planting: 'February - March',
+                harvest: 'May - June',
+                regions: ['Haryana', 'Rajasthan', 'Uttar Pradesh'],
+                tips: 'Grows well in hot dry climate. Requires well-drained sandy soil.',
+                investmentPerAcre: 28000,
+                avgYieldQuintal: 100,
+                marketPricePerQuintal: 1000
+            },
+            {
+                name: 'Cucumber (खीरा)',
+                icon: '🥒',
+                season: 'Zaid',
+                planting: 'February - March',
+                harvest: 'April - May',
+                regions: ['Uttar Pradesh', 'Punjab', 'Bihar'],
+                tips: 'Requires warm humid climate. Harvest when fruits are tender.',
+                investmentPerAcre: 25000,
+                avgYieldQuintal: 80,
+                marketPricePerQuintal: 1500
+            },
+            {
+                name: 'Summer Moong (ग्रीष्मकालीन मूंग)',
+                icon: '🫛',
+                season: 'Zaid',
+                planting: 'March - April',
+                harvest: 'June - July',
+                regions: ['Rajasthan', 'Uttar Pradesh', 'Haryana'],
+                tips: 'Short duration pulse crop. Enriches soil with nitrogen.',
+                investmentPerAcre: 15000,
+                avgYieldQuintal: 6,
+                marketPricePerQuintal: 7000
             }
         ];
 
+        const CROP_CATEGORIES = {
+            'Staple': ['Wheat', 'Rice', 'Maize', 'Barley', 'Bajra', 'Jowar'],
+            'Vegetables': ['Tomato', 'Potato', 'Cabbage', 'Onion', 'Watermelon', 'Muskmelon', 'Cucumber'],
+            'Cash': ['Cotton', 'Turmeric', 'Groundnut', 'Sunflower', 'Soybean', 'Mustard', 'Chickpea', 'Green Gram', 'Black Gram', 'Red Gram', 'Summer Moong', 'Sugarcane', 'Jute'],
+            'Plantation': ['Tea', 'Rubber', 'Coconut', 'Litchi', 'Banana', 'Black Pepper']
+        };
+
+        function getCropCategory(cropName) {
+            for (const [category, crops] of Object.entries(CROP_CATEGORIES)) {
+                if (crops.includes(cropName)) {
+                    return category;
+                }
+            }
+            return 'Cash';
+        }
+
+        function getROICapForCategory(category) {
+            const caps = {
+                'Staple': 60,
+                'Vegetables': 90,
+                'Cash': 120,
+                'Plantation': 45
+            };
+            return caps[category] || 100;
+        }
+
+        function getMarketVolatility(cropName) {
+            const seed = cropName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const normalized = (seed % 17) / 100;
+            return 0.92 + normalized;
+        }
+
+        function calculateFinancials(crop, landSize, selectedRegion) {
+            const cropName = crop.name.split(' (')[0];
+
+            let regionYieldFactor = 1.00;
+            if (selectedRegion && selectedRegion !== 'All') {
+                if (REGION_YIELD_FACTORS[cropName] && REGION_YIELD_FACTORS[cropName][selectedRegion]) {
+                    regionYieldFactor = REGION_YIELD_FACTORS[cropName][selectedRegion];
+                }
+            }
+
+            const adjustedYield = crop.avgYieldQuintal * regionYieldFactor;
+            const adjustedCost = crop.investmentPerAcre;
+
+            let finalPrice = crop.marketPricePerQuintal;
+            let priceSource = 'Market Adjusted';
+
+            const stateFactor = STATE_PROCUREMENT_FACTOR[selectedRegion] || 1.00;
+
+            if (MSP_DATA[cropName]) {
+                finalPrice = MSP_DATA[cropName] * stateFactor;
+                priceSource = 'MSP (Govt)';
+            } else {
+                const volatility = getMarketVolatility(cropName);
+                finalPrice = crop.marketPricePerQuintal * stateFactor * volatility;
+            }
+
+            const category = getCropCategory(cropName);
+            const isPlantation = category === 'Plantation';
+
+            let effectiveYield = adjustedYield;
+            if (isPlantation) {
+                effectiveYield = adjustedYield * 0.60;
+            }
+
+            const baseRevenue = effectiveYield * finalPrice;
+            let profit = baseRevenue - adjustedCost;
+            let roi = (profit / adjustedCost) * 100;
+
+            if (roi > 150) roi = 150;
+            if (roi < -50) roi = -50;
+
+            const roiCap = getROICapForCategory(category);
+            if (roi > roiCap) {
+                roi = roiCap;
+                profit = (roi / 100) * adjustedCost;
+            }
+
+            const totalInvestment = adjustedCost * landSize;
+            const totalRevenue = baseRevenue * landSize;
+            const totalProfit = profit * landSize;
+
+            let regionMessage = '';
+            if (regionYieldFactor > 1.10) {
+                regionMessage = 'High productivity zone for this crop.';
+            } else if (regionYieldFactor >= 0.95) {
+                regionMessage = 'Region suitable for stable returns.';
+            } else if (regionYieldFactor < 0.95) {
+                regionMessage = 'Climate conditions may reduce yield potential.';
+            }
+
+            const yieldAdjusted = regionYieldFactor !== 1.00;
+            const priceAdjusted = (MSP_DATA[cropName] || selectedRegion !== 'All');
+
+            return {
+                revenue: baseRevenue,
+                profit,
+                roi,
+                totalInvestment,
+                totalRevenue,
+                totalProfit,
+                regionMultiplier: regionYieldFactor,
+                regionMessage,
+                isRegionAdjusted: selectedRegion !== 'All',
+                priceSource,
+                stateAdjusted: selectedRegion !== 'All',
+                yieldAdjusted,
+                priceAdjusted
+            };
+        }
+
+        function getROIBadgeClass(roi) {
+            if (roi > 50) return 'roi-high';
+            if (roi >= 25) return 'roi-moderate';
+            return 'roi-low';
+        }
+
+        function getROILabel(roi) {
+            if (roi > 50) return 'High ROI';
+            if (roi >= 25) return 'Moderate ROI';
+            return 'Low ROI';
+        }
+
+        function formatCurrency(amount) {
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
         function renderCrops(crops) {
             const grid = document.getElementById('cropsGrid');
+            const landSize = parseFloat(document.getElementById('landSize').value) || 1;
+            const selectedRegion = document.getElementById('regionFilter').value;
             grid.innerHTML = '';
 
             crops.forEach(crop => {
+                const financials = calculateFinancials(crop, landSize, selectedRegion);
+                const roiBadgeClass = getROIBadgeClass(financials.roi);
+                const roiLabel = getROILabel(financials.roi);
+
+                let costBreakdownHTML = '';
+                if (financials.hasStructuredData && financials.costBreakdown) {
+                    costBreakdownHTML = `
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(47,107,61,0.1);">
+                            <h4 style="color: var(--green-primary); font-size: 1rem; margin-bottom: 1rem;">Cost Breakdown (Per Acre)</h4>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.85rem;">
+                                <div><span style="color: var(--text-light);">Seeds:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.seeds)}</span></div>
+                                <div><span style="color: var(--text-light);">Fertilizer:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.fertilizer)}</span></div>
+                                <div><span style="color: var(--text-light);">Pesticides:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.pesticides)}</span></div>
+                                <div><span style="color: var(--text-light);">Irrigation:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.irrigation)}</span></div>
+                                <div><span style="color: var(--text-light);">Labor:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.labor)}</span></div>
+                                <div><span style="color: var(--text-light);">Machinery:</span> <span style="color: var(--text-dark); font-weight: 600;">${formatCurrency(financials.costBreakdown.machinery)}</span></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'crop-card';
                 card.innerHTML = `
@@ -464,14 +1223,14 @@
                     <div class="crop-body">
                         <div class="timeline">
                             <div class="timeline-item">
-                                <div class="timeline-icon">🌱</div>
+                                <div class="timeline-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sprout-icon lucide-sprout"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/></svg></div>
                                 <div class="timeline-content">
                                     <h4>Planting Time</h4>
                                     <p>${crop.planting}</p>
                                 </div>
                             </div>
                             <div class="timeline-item">
-                                <div class="timeline-icon">🌾</div>
+                                <div class="timeline-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tractor-icon lucide-tractor"><path d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"/><path d="M16 18h-5"/><path d="M18 5a1 1 0 0 0-1 1v5.573"/><path d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"/><path d="M4 11V4"/><path d="M7 15h.01"/><path d="M8 10.1V4"/><circle cx="18" cy="18" r="2"/><circle cx="7" cy="15" r="5"/></svg></div>
                                 <div class="timeline-content">
                                     <h4>Harvest Time</h4>
                                     <p>${crop.harvest}</p>
@@ -479,11 +1238,77 @@
                             </div>
                         </div>
                         <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 1rem;">${crop.tips}</p>
-                        <div class="region-tag">📍 ${crop.regions.join(', ')}</div>
+                        <div class="region-tag"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin-icon lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg> ${crop.regions.join(', ')}</div>
+
+                        <div class="financial-section">
+                            <h4>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                Financial Snapshot
+                            </h4>
+                            ${costBreakdownHTML}
+                            <div style="margin-top: 1.5rem;">
+                                <div class="financial-row">
+                                    <span class="financial-label">Total Cost (${landSize} acre${landSize > 1 ? 's' : ''}):</span>
+                                    <span class="financial-value">${formatCurrency(financials.totalInvestment)}</span>
+                                </div>
+                                ${financials.hasStructuredData ? `
+                                <div class="financial-row">
+                                    <span class="financial-label">Expected Yield:</span>
+                                    <span class="financial-value">${financials.yieldPerAcre.toFixed(1)} quintals/acre</span>
+                                </div>
+                                ` : ''}
+                                ${financials.hasStructuredData && financials.totalRevenueMSP ? `
+                                <div class="financial-row">
+                                    <span class="financial-label">Revenue at MSP (Min Guarantee):</span>
+                                    <span class="financial-value">${formatCurrency(financials.totalRevenueMSP)}</span>
+                                </div>
+                                ` : ''}
+                                <div class="financial-row">
+                                    <span class="financial-label">Revenue at Market Price:</span>
+                                    <span class="financial-value">${formatCurrency(financials.totalRevenueMarket || financials.totalRevenue)}</span>
+                                </div>
+                                <div class="financial-row">
+                                    <span class="financial-label">Net Profit (Market):</span>
+                                    <span class="financial-value">${formatCurrency(financials.totalProfit)}</span>
+                                </div>
+                                <div class="financial-row">
+                                    <span class="financial-label">ROI:</span>
+                                    <span class="roi-badge ${roiBadgeClass}">${financials.roi.toFixed(1)}% - ${roiLabel}</span>
+                                </div>
+                            </div>
+
+                            ${financials.regionMessage ? `<p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.8rem; font-style: italic;">${financials.regionMessage}</p>` : ''}
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function handleEmptySeason(selectedRegion, selectedSeason) {
+            const grid = document.getElementById('cropsGrid');
+            grid.innerHTML = '';
+
+            let message = `This season has limited major crops in the selected region.`;
+
+            if (selectedRegion !== 'All' && selectedSeason !== 'All') {
+                message = `No major ${selectedSeason} crops are currently available for ${selectedRegion}.`;
+            }
+
+            const emptyCard = document.createElement('div');
+            emptyCard.className = 'empty-state-card';
+            emptyCard.innerHTML = `
+                <h3>No Crops Available for Selected Season</h3>
+                <p>${message}</p>
+                <button class="empty-state-btn" onclick="viewAllSeasons()">View All Seasons</button>
+            `;
+
+            grid.appendChild(emptyCard);
+        }
+
+        function viewAllSeasons() {
+            document.getElementById('seasonFilter').value = 'All';
+            filterCrops();
         }
 
         function filterCrops() {
@@ -493,18 +1318,22 @@
             let filtered = cropData;
 
             if (region !== 'All') {
-                filtered = filtered.filter(crop => crop.regions.includes(region));
+                filtered = filtered.filter(crop => crop.regions.includes(region) || crop.regions.includes('All'));
             }
 
             if (season !== 'All') {
                 filtered = filtered.filter(crop => crop.season === season);
             }
 
+            if (filtered.length === 0 && region !== 'All' && season !== 'All') {
+                handleEmptySeason(region, season);
+                return;
+            }
+
             renderCrops(filtered);
         }
 
-        // Initial render
-        renderCrops(cropData);
+        filterCrops();
     </script>
 </body>
 </html>

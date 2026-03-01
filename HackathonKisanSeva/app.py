@@ -33,7 +33,7 @@ class User(db.Model):
 
 class PestAnalysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     image_path = db.Column(db.String(200))
     pest_detected = db.Column(db.String(100))
     confidence = db.Column(db.Integer)
@@ -51,7 +51,7 @@ class CropCalendar(db.Model):
 
 class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(200))
     content = db.Column(db.Text)
     category = db.Column(db.String(50))
@@ -62,13 +62,13 @@ class ForumPost(db.Model):
 class ForumReply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     content = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class MarketplaceListing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(200))
     category = db.Column(db.String(50))
     price = db.Column(db.Float)
@@ -249,8 +249,8 @@ def crop_calendar():
         crops = [c for c in CROP_CALENDAR_DATA if c['season'] == season]
     return render_template('crop_calendar.html', crops=crops, username=session.get('user'))
 
-@app.route('/impact-dashboard', methods=['GET', 'POST'])
-def impact_dashboard():
+@app.route('/roi-calculator', methods=['GET', 'POST'])
+def roi_calculator():
     results = None
     if request.method == 'POST':
         farm_size = float(request.form.get('farm_size', 1))
@@ -273,17 +273,16 @@ def impact_dashboard():
             'roi_percentage': round(roi, 2),
             'payback_period': round(trap_total / savings_year, 1)
         }
-    return render_template('impact_dashboard.html', results=results, username=session.get('user'))
+    return render_template('roi_calculator.html', results=results, username=session.get('user'))
 
-@app.route('/knowledge_exchange', methods=['GET', 'POST'])
+@app.route('/knowledge-exchange', methods=['GET', 'POST'])
 def knowledge_exchange():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
         category = request.form.get('category', 'general')
 
-        post = ForumPost(
-            user_id=session.get('user_id'),  # no fallback
+        post = ForumPost(user_id=session.get('user_id', 1),
                          title=title, content=content, category=category)
         db.session.add(post)
         db.session.commit()

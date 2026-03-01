@@ -275,7 +275,7 @@ def impact_dashboard():
         }
     return render_template('impact_dashboard.html', results=results, username=session.get('user'))
 
-@app.route('/knowledge-exchange', methods=['GET', 'POST'])
+@app.route('/knowledge_exchange', methods=['GET', 'POST'])
 def knowledge_exchange():
     if request.method == 'POST':
         title = request.form['title']
